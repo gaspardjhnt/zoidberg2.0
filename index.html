@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détection de Pneumonie - Projet Zoidberg 2.0</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            margin: 0;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .highlight {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .chart {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Détection de Pneumonie par Intelligence Artificielle</h1>
+        <p>Projet Zoidberg 2.0 - Analyse de radiographies thoraciques</p>
+    </header>
+
+    <section>
+        <h2>À propos du projet</h2>
+        <p>
+            Ce projet vise à développer un système de détection automatique de pneumonie à partir de radiographies thoraciques en utilisant des techniques d'apprentissage automatique. Le modèle a été entraîné sur un ensemble de données contenant des images de radiographies thoraciques normales et présentant des signes de pneumonie.
+        </p>
+        <div class="highlight">
+            <p><strong>Objectif :</strong> Aider les professionnels de santé à détecter rapidement et efficacement les cas de pneumonie à partir de radiographies thoraciques.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Méthodologie</h2>
+        <div class="container">
+            <div class="card">
+                <h3>Prétraitement des données</h3>
+                <p>Les radiographies ont été prétraitées pour standardiser leur taille et leur format, puis réduites en dimension à l'aide de l'Analyse en Composantes Principales (PCA).</p>
+                <ul>
+                    <li>Redimensionnement des images</li>
+                    <li>Normalisation des valeurs de pixels</li>
+                    <li>Réduction de dimension avec PCA</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Modèles testés</h3>
+                <p>Plusieurs algorithmes d'apprentissage automatique ont été évalués pour trouver le plus performant :</p>
+                <ul>
+                    <li>Régression Logistique</li>
+                    <li>Arbre de Décision</li>
+                    <li>Random Forest</li>
+                    <li>SVM (Support Vector Machine)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Résultats</h2>
+        <p>Le modèle de <strong>Régression Logistique</strong> a obtenu les meilleures performances parmi tous les modèles testés.</p>
+        
+        <div class="chart">
+            <h3>Performances des modèles</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Modèle</th>
+                        <th>Exactitude</th>
+                        <th>Précision</th>
+                        <th>Rappel</th>
+                        <th>Score F1</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Régression Logistique</strong></td>
+                        <td>95.94%</td>
+                        <td>97.81%</td>
+                        <td>96.70%</td>
+                        <td>97.25%</td>
+                    </tr>
+                    <tr>
+                        <td>Arbre de Décision</td>
+                        <td>88.04%</td>
+                        <td>92.48%</td>
+                        <td>91.33%</td>
+                        <td>91.90%</td>
+                    </tr>
+                    <tr>
+                        <td>Forêt Aléatoire</td>
+                        <td>94.50%</td>
+                        <td>96.20%</td>
+                        <td>95.80%</td>
+                        <td>96.00%</td>
+                    </tr>
+                    <tr>
+                        <td>SVM</td>
+                        <td>93.20%</td>
+                        <td>95.10%</td>
+                        <td>94.30%</td>
+                        <td>94.70%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="highlight">
+            <p>Le modèle de Régression Logistique a démontré une excellente capacité à distinguer entre les cas normaux et les cas de pneumonie, avec une aire sous la courbe ROC (AUC) de 0.98.</p>
+        </div>
+    </section>
+<!-- 
+    <section>
+        <h2>Utilisation du modèle</h2>
+        <p>Pour utiliser le modèle, vous pouvez exécuter le script de démonstration :</p>
+        <div class="highlight">
+            <code>python demo.py chemin/vers/image.jpg</code>
+        </div>
+        <p>Ou pour analyser un dossier entier d'images :</p>
+        <div class="highlight">
+            <code>python demo.py --batch chemin/vers/dossier</code>
+        </div>
+    </section> -->
+
+    <section>
+        <h2>Limitations et perspectives</h2>
+        <div class="container">
+            <div class="card">
+                <h3>Limitations actuelles</h3>
+                <ul>
+                    <li>Le modèle ne peut pas distinguer entre différents types de pneumonie (virale, bactérienne)</li>
+                    <li>La qualité des radiographies peut affecter les performances du modèle</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>Perspectives futures</h3>
+                <ul>
+                    <li>Utilisation de réseaux de neurones plus avancés</li>
+                    <li>Extension du modèle pour distinguer entre différents types de pneumonie</li>
+                    <li>Intégration avec des systèmes de dossiers médicaux électroniques</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

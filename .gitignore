@@ -8,8 +8,14 @@ data/
 *.tiff
 *.dcm
 
-# Modèles entraînés (optionnel, selon votre choix)
-# models/
+# Modèles entraînés
+models/
+*.pkl
+*.h5
+*.joblib
+*.model
+*.weights
+*.bin
 
 # Fichiers Python
 __pycache__/

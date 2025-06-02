@@ -134,20 +134,21 @@
             </div>
             <div class="card">
                 <h3>Modèles testés</h3>
-                <p>Plusieurs algorithmes d'apprentissage automatique ont été évalués pour trouver le plus performant :</p>
+                <p>Plusieurs algorithmes d'apprentissage automatique ont été évalués avec différentes configurations de PCA :</p>
                 <ul>
-                    <li>Régression Logistique</li>
-                    <li>Arbre de Décision</li>
-                    <li>Random Forest</li>
-                    <li>SVM (Support Vector Machine)</li>
+                    <li>Régression Logistique (avec et sans PCA)</li>
+                    <li>Arbre de Décision (avec et sans PCA)</li>
+                    <li>Random Forest (avec et sans PCA)</li>
+                    <li>SVM (Support Vector Machine) (avec et sans PCA)</li>
                 </ul>
+                <p>Différentes configurations de PCA ont été testées (10, 20, 50, 100, 1000 composantes).</p>
             </div>
         </div>
     </section>
 
     <section>
         <h2>Résultats</h2>
-        <p>Le modèle de <strong>Régression Logistique</strong> a obtenu les meilleures performances parmi tous les modèles testés.</p>
+        <p>Le modèle de <strong>SVM</strong> avec la configuration PCA-1000 a obtenu les meilleures performances parmi tous les modèles testés.</p>
         
         <div class="chart">
             <h3>Performances des modèles</h3>
@@ -155,47 +156,62 @@
                 <thead>
                     <tr>
                         <th>Modèle</th>
+                        <th>Configuration</th>
                         <th>Exactitude</th>
                         <th>Précision</th>
                         <th>Rappel</th>
                         <th>Score F1</th>
+                        <th>ROC AUC</th>
+                        <th>Temps (s)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>Régression Logistique</strong></td>
-                        <td>95.94%</td>
-                        <td>97.81%</td>
-                        <td>96.70%</td>
-                        <td>97.25%</td>
+                        <td>Régression Logistique</td>
+                        <td>PCA-1000</td>
+                        <td>96,63%</td>
+                        <td>98,33%</td>
+                        <td>97,11%</td>
+                        <td>97,72%</td>
+                        <td>99,18%</td>
+                        <td>3,449</td>
                     </tr>
                     <tr>
                         <td>Arbre de Décision</td>
-                        <td>88.04%</td>
-                        <td>92.48%</td>
-                        <td>91.33%</td>
-                        <td>91.90%</td>
+                        <td>PCA-10</td>
+                        <td>90,80%</td>
+                        <td>93,54%</td>
+                        <td>94,12%</td>
+                        <td>93,83%</td>
+                        <td>88,07%</td>
+                        <td>0,267</td>
                     </tr>
                     <tr>
-                        <td>Forêt Aléatoire</td>
-                        <td>94.50%</td>
-                        <td>96.20%</td>
-                        <td>95.80%</td>
-                        <td>96.00%</td>
+                        <td>Random Forest</td>
+                        <td>Sans PCA</td>
+                        <td>95,55%</td>
+                        <td>96,43%</td>
+                        <td>97,63%</td>
+                        <td>97,03%</td>
+                        <td>98,22%</td>
+                        <td>39,630</td>
                     </tr>
                     <tr>
-                        <td>SVM</td>
-                        <td>93.20%</td>
-                        <td>95.10%</td>
-                        <td>94.30%</td>
-                        <td>94.70%</td>
+                        <td><strong>SVM</strong></td>
+                        <td><strong>PCA-1000</strong></td>
+                        <td><strong>97,39%</strong></td>
+                        <td><strong>98,35%</strong></td>
+                        <td><strong>98,14%</strong></td>
+                        <td><strong>98,24%</strong></td>
+                        <td><strong>99,54%</strong></td>
+                        <td>28,278</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="highlight">
-            <p>Le modèle de Régression Logistique a démontré une excellente capacité à distinguer entre les cas normaux et les cas de pneumonie, avec une aire sous la courbe ROC (AUC) de 0.98.</p>
+            <p>Le modèle SVM avec PCA-1000 a démontré une excellente capacité à distinguer entre les cas normaux et les cas de pneumonie, avec une aire sous la courbe ROC (AUC) de 0,9954.</p>
         </div>
     </section>
 <!-- 

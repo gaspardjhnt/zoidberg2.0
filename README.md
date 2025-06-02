@@ -9,13 +9,14 @@ Ce projet vise à développer un système de détection automatique de pneumonie
 zoidberg2.0/
 │
 ├── data/                      # Dossier de données (radiographies thoraciques)
+│   └── chest_Xray/            # Images de radiographies thoraciques
 │
 ├── src/                       # Code source principal
 │   ├── preprocessing/         # Traitement des images
 │   │   └── preprocess_images.py # Fonctions de prétraitement d'images
 │   │
 │   ├── visualization/         # Visualisation des données
-│   │   └── visualizer.py      # Fonctions de visualisation
+│   │   └── visualizer.py      # Fonctions de visualisation pour les tableaux de métriques
 │   │
 │   ├── models/                # Modèles d'apprentissage automatique
 │   │   └── predict.py         # Script pour charger le modèle et faire des prédictions
@@ -25,18 +26,20 @@ zoidberg2.0/
 ├── notebooks/                 # Notebooks Jupyter
 │   ├── 01_exploration.ipynb   # Exploration des données
 │   ├── 02_preprocessing.ipynb # Test du prétraitement
-│   └── 03_model_training_sklearn_with_pca.ipynb # Entraînement des modèles avec PCA
+│   ├── 03_model_training_sklearn_with_pca.ipynb # Entraînement des modèles avec PCA
+│   └── 04_model_training_sklearn.ipynb # Entraînement des modèles avec et sans PCA
 │
-├── models/                    # Modèles entraînés sauvegardés
-│   └── régression_logistique_model.pkl # Modèle de régression logistique entraîné
+├── models/                    # Modèles entraînés sauvegardés (exclus de Git en raison de leur taille)
 │
 ├── tests/                     # Tests unitaires
 │   ├── test_preprocessing.py  # Tests des fonctions de prétraitement
-│   └── test_predict.py        # Tests des fonctions de prédiction
+│   ├── test_predict.py        # Tests des fonctions de prédiction
+│   └── test_visualizer.py     # Tests des fonctions de visualisation
 │
 ├── demo.py                    # Script de démonstration
 ├── index.html                 # Page de présentation du projet
 ├── rapport_pneumonie.pdf      # Rapport des résultats du modèle
+├── T-DEV-810_project.pdf      # Document du projet
 └── requirements.txt           # Dépendances du projet
 ```
 
@@ -57,51 +60,46 @@ pip install -r requirements.txt
 
 ### 2. Entraînement des modèles
 
+#### Notebook 03 : Entraînement avec PCA
+
 Le notebook `notebooks/03_model_training_sklearn_with_pca.ipynb` contient l'entraînement de plusieurs modèles d'apprentissage automatique avec réduction de dimension par PCA. Les modèles testés incluent :
-- Régression Logistique (meilleure performance)
+- Régression Logistique
 - Arbre de Décision
 - Random Forest
 - SVM
 
-### 3. Utilisation du modèle entraîné
+#### Notebook 04 : Entraînement avec et sans PCA
 
-Vous pouvez utiliser le script de démonstration pour faire des prédictions sur de nouvelles images :
-
-```bash
-# Pour une seule image
-python demo.py chemin/vers/image.jpg
-
-# Pour un dossier d'images
-python demo.py --batch chemin/vers/dossier
-```
-
-Ou utiliser le modèle directement dans votre code :
-
-```python
-from src.models.predict import predict_pneumonia
-
-# Prédiction sur une image
-result, probability = predict_pneumonia("chemin/vers/image.jpg")
-print(f"Résultat: {result}, Probabilité: {probability:.4f}")
-```
+Le notebook `notebooks/04_model_training_sklearn.ipynb` étend l'analyse en :
+- Entraînant chaque modèle avec et sans PCA (possibilité d'activer/desactiver le PCA)
+- Testant différentes configurations de PCA (10, 20, 50, 100, 1000 composantes)
+- Ajoutant un tableau comparatif des scores de tous les modèles à la fin
 
 ## Résultats
 
-Le modèle de **Régression Logistique** a obtenu les meilleures performances avec :
-- **Exactitude (Accuracy)** : 95.94%
-- **Précision (Precision)** : 97.81%
-- **Rappel (Recall)** : 96.70%
-- **Score F1** : 97.25%
+Les résultats des modèles sont maintenant présentés avec un formatage amélioré :
+- Les métriques (accuracy, precision, recall, F1, ROC AUC) sont affichées en pourcentage avec 2 décimales
+- Les temps d'exécution sont arrondis à 3 décimales
 
-Ces résultats montrent que le modèle est particulièrement efficace pour détecter les cas de pneumonie tout en maintenant une bonne capacité à identifier les cas normaux.
+Le modèle de **SVM** avec la configuration PCA-1000 a obtenu les meilleures performances avec :
+- **Exactitude (Accuracy)** : 97,39%
+- **Précision (Precision)** : 98,35%
+- **Rappel (Recall)** : 98,14%
+- **Score F1** : 98,24%
+- **ROC AUC** : 99,54%
 
 ## Tests unitaires
 
 Pour exécuter les tests unitaires :
 
 ```bash
+# Exécuter tous les tests
+python -m unittest discover tests
+
+# Exécuter un test spécifique
 python -m unittest tests/test_predict.py
 python -m unittest tests/test_preprocessing.py
+python -m unittest tests/test_visualizer.py
 ```
 
 ## Limitations et perspectives

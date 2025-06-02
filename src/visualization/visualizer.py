@@ -14,11 +14,29 @@ def afficher_tableau_comparatif_modeles(modeles, metriques, valeurs, titre="Perf
                        Format: [[valeurs_modele1], [valeurs_modele2], ...].
         titre (str): Titre du tableau.
     """
-    # Créer un DataFrame pandas pour faciliter la création du tableau
+    # Formater les valeurs avant de créer le DataFrame
+    formatted_values = []
+    for j in range(len(modeles)):
+        model_values = []
+        for i, val in enumerate(valeurs[j]):
+            metrique = metriques[i].lower()
+            # Métriques en pourcentage (scores)
+            if any(term in metrique for term in ['accuracy', 'precision', 'recall', 'f1', 'auc', 'score']):
+                model_values.append(f"{val:.2%}")
+            # Métriques de temps
+            elif any(term in metrique for term in ['temps', 'time', 'durée', 'duration', 'sec']):
+                model_values.append(f"{val:.3f}")
+            # Autres métriques
+            else:
+                model_values.append(str(val))
+        formatted_values.append(model_values)
+    
+    # Créer un dictionnaire pour le DataFrame
     data = {}
     for i, metrique in enumerate(metriques):
-        data[metrique] = [valeurs[j][i] for j in range(len(modeles))]
+        data[metrique] = [formatted_values[j][i] for j in range(len(modeles))]
     
+    # Créer le DataFrame avec les valeurs formatées
     df = pd.DataFrame(data, index=modeles)
     
     # Définir la figure et l'axe

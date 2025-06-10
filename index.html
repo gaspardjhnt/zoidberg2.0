@@ -142,6 +142,14 @@
                     <li>SVM (Support Vector Machine) (avec et sans PCA)</li>
                 </ul>
                 <p>Différentes configurations de PCA ont été testées (10, 20, 50, 100, 1000 composantes).</p>
+                <p>De plus, différentes métriques de scoring ont été utilisées pour l'hyperparamétrage des modèles :</p>
+                <ul>
+                    <li>Accuracy (exactitude)</li>
+                    <li>Precision (précision)</li>
+                    <li>Recall (rappel)</li>
+                    <li>F1-score (moyenne harmonique de précision et rappel)</li>
+                    <li>ROC AUC (aire sous la courbe ROC)</li>
+                </ul>
             </div>
         </div>
     </section>
@@ -149,9 +157,10 @@
     <section>
         <h2>Résultats</h2>
         <p>Le modèle de <strong>SVM</strong> avec la configuration PCA-1000 a obtenu les meilleures performances parmi tous les modèles testés.</p>
+        <p>L'analyse des différentes métriques de scoring a révélé que le choix de la métrique influence significativement la sélection des hyperparamètres optimaux et les performances finales des modèles.</p>
         
         <div class="chart">
-            <h3>Performances des modèles</h3>
+            <h3>Performances des modèles (optimisés avec différentes métriques de scoring)</h3>
             <table>
                 <thead>
                     <tr>
@@ -168,7 +177,7 @@
                 <tbody>
                     <tr>
                         <td>Régression Logistique</td>
-                        <td>PCA-1000</td>
+                        <td>PCA-1000 (ROC AUC)</td>
                         <td>96,63%</td>
                         <td>98,33%</td>
                         <td>97,11%</td>
@@ -178,7 +187,7 @@
                     </tr>
                     <tr>
                         <td>Arbre de Décision</td>
-                        <td>PCA-10</td>
+                        <td>PCA-10 (Accuracy)</td>
                         <td>90,80%</td>
                         <td>93,54%</td>
                         <td>94,12%</td>
@@ -188,7 +197,7 @@
                     </tr>
                     <tr>
                         <td>Random Forest</td>
-                        <td>Sans PCA</td>
+                        <td>Sans PCA (Recall)</td>
                         <td>95,55%</td>
                         <td>96,43%</td>
                         <td>97,63%</td>
@@ -198,7 +207,7 @@
                     </tr>
                     <tr>
                         <td><strong>SVM</strong></td>
-                        <td><strong>PCA-1000</strong></td>
+                        <td><strong>PCA-1000 (F1)</strong></td>
                         <td><strong>97,39%</strong></td>
                         <td><strong>98,35%</strong></td>
                         <td><strong>98,14%</strong></td>
@@ -211,7 +220,7 @@
         </div>
 
         <div class="highlight">
-            <p>Le modèle SVM avec PCA-1000 a démontré une excellente capacité à distinguer entre les cas normaux et les cas de pneumonie, avec une aire sous la courbe ROC (AUC) de 0,9954.</p>
+            <p>Le modèle SVM avec PCA-1000, optimisé avec la métrique de scoring F1, a démontré une excellente capacité à distinguer entre les cas normaux et les cas de pneumonie, avec une aire sous la courbe ROC (AUC) de 0,9954. Cette métrique de scoring (F1) a permis d'obtenir le meilleur équilibre entre précision et rappel.</p>
         </div>
     </section>
 <!-- 
@@ -235,6 +244,8 @@
                 <ul>
                     <li>Le modèle ne peut pas distinguer entre différents types de pneumonie (virale, bactérienne)</li>
                     <li>La qualité des radiographies peut affecter les performances du modèle</li>
+                    <li>Les données d'entraînement peuvent ne pas être représentatives de tous les cas cliniques</li>
+                    <li>Le choix de la métrique de scoring doit être adapté au contexte clinique spécifique</li>
                 </ul>
             </div>
             <div class="card">

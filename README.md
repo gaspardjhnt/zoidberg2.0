@@ -27,7 +27,8 @@ zoidberg2.0/
 │   ├── 01_exploration.ipynb   # Exploration des données
 │   ├── 02_preprocessing.ipynb # Test du prétraitement
 │   ├── 03_model_training_sklearn_with_pca.ipynb # Entraînement des modèles avec PCA
-│   └── 04_model_training_sklearn.ipynb # Entraînement des modèles avec et sans PCA
+│   ├── 04_model_training_sklearn.ipynb # Entraînement des modèles avec et sans PCA
+│   └── 05_model_training_sklearn_different_scoring.ipynb # Test de différentes métriques de scoring
 │
 ├── models/                    # Modèles entraînés sauvegardés (exclus de Git en raison de leur taille)
 │
@@ -75,11 +76,23 @@ Le notebook `notebooks/04_model_training_sklearn.ipynb` étend l'analyse en :
 - Testant différentes configurations de PCA (10, 20, 50, 100, 1000 composantes)
 - Ajoutant un tableau comparatif des scores de tous les modèles à la fin
 
+#### Notebook 05 : Test de différentes métriques de scoring
+
+Le notebook `notebooks/05_model_training_sklearn_different_scoring.ipynb` pousse l'analyse plus loin en :
+- Testant différentes métriques de scoring pour l'hyperparamétrage des modèles (accuracy, precision, recall, f1, roc_auc)
+- Comparant l'impact du choix de la métrique de scoring sur les performances finales des modèles
+- Visualisant les résultats par métrique de scoring et par modèle
+- Identifiant la meilleure combinaison modèle/configuration/métrique de scoring
+
 ## Résultats
 
-Les résultats des modèles sont maintenant présentés avec un formatage amélioré :
+### Formatage des résultats
+
+Les résultats des modèles sont présentés avec un formatage amélioré :
 - Les métriques (accuracy, precision, recall, F1, ROC AUC) sont affichées en pourcentage avec 2 décimales
 - Les temps d'exécution sont arrondis à 3 décimales
+
+### Meilleur modèle (Notebook 04)
 
 Le modèle de **SVM** avec la configuration PCA-1000 a obtenu les meilleures performances avec :
 - **Exactitude (Accuracy)** : 97,39%
@@ -87,6 +100,18 @@ Le modèle de **SVM** avec la configuration PCA-1000 a obtenu les meilleures per
 - **Rappel (Recall)** : 98,14%
 - **Score F1** : 98,24%
 - **ROC AUC** : 99,54%
+
+### Impact des métriques de scoring (Notebook 05)
+
+L'analyse des différentes métriques de scoring a révélé que :
+
+- Le choix de la métrique de scoring influence significativement la sélection des hyperparamètres optimaux
+- Les modèles optimisés pour le rappel (recall) tendent à avoir une meilleure sensibilité mais parfois au détriment de la précision
+- Les modèles optimisés pour la précision (precision) sont plus conservateurs dans leurs prédictions
+- L'optimisation sur le score F1 offre généralement le meilleur équilibre entre précision et rappel
+- L'optimisation sur ROC AUC produit des modèles avec une bonne capacité de discrimination globale
+
+Le meilleur compromis a été obtenu en optimisant sur le score F1, qui a permis d'identifier le SVM avec PCA-1000 comme configuration optimale.
 
 ## Tests unitaires
 

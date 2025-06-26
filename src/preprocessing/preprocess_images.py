@@ -252,9 +252,10 @@ def diviser_donnees(X, y, test_size=0.2, random_state=42):
     """
     return train_test_split(X, y, test_size=test_size, random_state=random_state, stratify=y)
 
-def preparer_donnees_pour_modele(train_dir, test_dir, img_size=(150, 150), batch_size=32, validation_size=0.25, limite_train=None, limite_test=None):
+def preparer_donnees_pour_modele(train_dir, test_dir, img_size=(150, 150), batch_size=32, validation_size=0.25, limite_train=None, limite_test=None, val_dir=None):
     """
     Prépare les données pour l'entraînement d'un modèle.
+    Peut fusionner train+val puis refaire un split équilibré si val_dir est fourni.
     
     Args:
         train_dir (str): Chemin vers le dossier d'entraînement.
@@ -264,7 +265,8 @@ def preparer_donnees_pour_modele(train_dir, test_dir, img_size=(150, 150), batch
         validation_size (float): Proportion des données d'entraînement à utiliser pour la validation.
         limite_train (int, optional): Limite le nombre d'images chargées pour l'entraînement.
         limite_test (int, optional): Limite le nombre d'images chargées pour le test.
-        
+        val_dir (str, optional): Chemin vers le dossier de validation (pour fusionner train+val).
+    
     Returns:
         tuple: (X_train, y_train, X_val, y_val, X_test, y_test)
     """
@@ -273,35 +275,50 @@ def preparer_donnees_pour_modele(train_dir, test_dir, img_size=(150, 150), batch
     train_pneumonia_dir = os.path.join(train_dir, 'PNEUMONIA')
     test_normal_dir = os.path.join(test_dir, 'NORMAL')
     test_pneumonia_dir = os.path.join(test_dir, 'PNEUMONIA')
-    
-    # Charger les données d'entraînement
-    X_train, y_train = charger_images_avec_etiquettes(train_normal_dir, train_pneumonia_dir, img_size, limite=limite_train)
-    
-    # Afficher des informations sur les données chargées
-    print(f"Données d'entraînement chargées: {X_train.shape[0]} images")
-    print(f"  - Images normales: {np.sum(y_train == 0)}")
-    print(f"  - Images avec pneumonie: {np.sum(y_train == 1)}")
-    
-    # Diviser les données d'entraînement en entraînement et validation
-    X_train, X_val, y_train, y_val = diviser_donnees(X_train, y_train, test_size=validation_size)
-    
-    # Afficher des informations sur la répartition
-    print(f"\nRépartition après division:")
-    print(f"Ensemble d'entraînement: {X_train.shape[0]} images")
-    print(f"  - Images normales: {np.sum(y_train == 0)}")
-    print(f"  - Images avec pneumonie: {np.sum(y_train == 1)}")
-    print(f"Ensemble de validation: {X_val.shape[0]} images")
-    print(f"  - Images normales: {np.sum(y_val == 0)}")
-    print(f"  - Images avec pneumonie: {np.sum(y_val == 1)}")
-    
+
+    if val_dir is not None:
+        # Fusionner train + val, puis refaire un split
+        val_normal_dir = os.path.join(val_dir, 'NORMAL')
+        val_pneumonia_dir = os.path.join(val_dir, 'PNEUMONIA')
+        print(f"Chargement des images de train ({train_dir}) et val ({val_dir}) pour fusion...")
+        X_train_raw, y_train_raw = charger_images_avec_etiquettes(train_normal_dir, train_pneumonia_dir, img_size, limite=limite_train)
+        X_val_raw, y_val_raw = charger_images_avec_etiquettes(val_normal_dir, val_pneumonia_dir, img_size)
+        X_all = np.concatenate([X_train_raw, X_val_raw])
+        y_all = np.concatenate([y_train_raw, y_val_raw])
+        print(f"Fusion train+val: {X_all.shape[0]} images")
+        # Nouveau split stratifié
+        X_train, X_val, y_train, y_val = train_test_split(
+            X_all, y_all, test_size=max(validation_size, 100/len(X_all)), random_state=42, stratify=y_all
+        )
+        print(f"\nNouveau split train/val:")
+        print(f"Ensemble d'entraînement: {X_train.shape[0]} images")
+        print(f"  - Images normales: {np.sum(y_train == 0)}")
+        print(f"  - Images avec pneumonie: {np.sum(y_train == 1)}")
+        print(f"Ensemble de validation: {X_val.shape[0]} images")
+        print(f"  - Images normales: {np.sum(y_val == 0)}")
+        print(f"  - Images avec pneumonie: {np.sum(y_val == 1)}")
+    else:
+        # Comportement classique
+        X_train, y_train = charger_images_avec_etiquettes(train_normal_dir, train_pneumonia_dir, img_size, limite=limite_train)
+        print(f"Données d'entraînement chargées: {X_train.shape[0]} images")
+        print(f"  - Images normales: {np.sum(y_train == 0)}")
+        print(f"  - Images avec pneumonie: {np.sum(y_train == 1)}")
+        # Split train/val
+        X_train, X_val, y_train, y_val = diviser_donnees(X_train, y_train, test_size=validation_size)
+        print(f"\nRépartition après division:")
+        print(f"Ensemble d'entraînement: {X_train.shape[0]} images")
+        print(f"  - Images normales: {np.sum(y_train == 0)}")
+        print(f"  - Images avec pneumonie: {np.sum(y_train == 1)}")
+        print(f"Ensemble de validation: {X_val.shape[0]} images")
+        print(f"  - Images normales: {np.sum(y_val == 0)}")
+        print(f"  - Images avec pneumonie: {np.sum(y_val == 1)}")
+
     # Charger les données de test
     X_test, y_test = charger_images_avec_etiquettes(test_normal_dir, test_pneumonia_dir, img_size, limite=limite_test)
-    
-    # Afficher des informations sur les données de test
     print(f"\nEnsemble de test: {X_test.shape[0]} images")
     print(f"  - Images normales: {np.sum(y_test == 0)}")
     print(f"  - Images avec pneumonie: {np.sum(y_test == 1)}")
-    
+
     return X_train, y_train, X_val, y_val, X_test, y_test
 
 if __name__ == "__main__":

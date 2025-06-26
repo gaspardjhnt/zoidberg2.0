@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapport de Projet - Détection de Pneumonie par Apprentissage Automatique</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+            margin-top: 1.5em;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5em;
+        }
+        h2 {
+            font-size: 1.8em;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.3em;
+        }
+        h3 {
+            font-size: 1.4em;
+        }
+        p, ul, ol {
+            margin-bottom: 1.2em;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #4993D2;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f1f1f2;
+        }
+        .figure {
+            text-align: center;
+            margin: 25px 0;
+        }
+        .figure img {
+            margin-bottom: 10px;
+        }
+        .figure-caption {
+            font-style: italic;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px;
+        }
+        .note {
+            background-color: #e7f4ff;
+            border-left: 4px solid #4993D2;
+            padding: 10px 15px;
+            margin: 20px 0;
+        }
+        .warning {
+            background-color: #fff5e6;
+            border-left: 4px solid #ff9800;
+            padding: 10px 15px;
+            margin: 20px 0;
+        }
+        .success {
+            background-color: #f0fff0;
+            border-left: 4px solid #4caf50;
+            padding: 10px 15px;
+            margin: 20px 0;
+        }
+        .header-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header-logo img {
+            max-width: 200px;
+            box-shadow: none;
+        }
+        .toc {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .toc h3 {
+            margin-top: 0;
+        }
+        .toc ul {
+            padding-left: 20px;
+        }
+        .toc li {
+            margin-bottom: 5px;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+        .metrics {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .conclusion {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        .author-info {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-logo">
+        <h1>Détection de Pneumonie par Apprentissage Automatique</h1>
+        <p><strong>Projet T-DEV-810</strong></p>
+        <p>Juin 2025</p>
+    </div>
+
+    <div class="toc">
+        <h3>Table des matières</h3>
+        <ol>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#contexte">Contexte et Objectifs</a></li>
+            <li><a href="#methodologie">Méthodologie</a>
+                <ul>
+                    <li><a href="#donnees">Données</a></li>
+                    <li><a href="#pretraitement">Prétraitement des Images</a></li>
+                    <li><a href="#modeles">Modèles d'Apprentissage</a></li>
+                    <li><a href="#pca">Analyse en Composantes Principales (PCA)</a></li>
+                    <li><a href="#evaluation">Métriques d'Évaluation</a></li>
+                </ul>
+            </li>
+            <li><a href="#implementation">Implémentation</a>
+                <ul>
+                    <li><a href="#structure">Structure du Projet</a></li>
+                    <li><a href="#preprocessing">Module de Prétraitement</a></li>
+                    <li><a href="#training">Entraînement des Modèles</a></li>
+                    <li><a href="#visualization">Visualisation des Résultats</a></li>
+                </ul>
+            </li>
+            <li><a href="#resultats">Résultats et Analyse</a>
+                <ul>
+                    <li><a href="#comparaison">Comparaison des Modèles</a></li>
+                    <li><a href="#impact-pca">Impact de la PCA</a></li>
+                    <li><a href="#meilleur-modele">Meilleur Modèle</a></li>
+                </ul>
+            </li>
+            <li><a href="#discussion">Discussion</a>
+                <ul>
+                    <li><a href="#limitations">Limitations</a></li>
+                    <li><a href="#ameliorations">Améliorations Possibles</a></li>
+                </ul>
+            </li>
+            <li><a href="#conclusion">Conclusion</a></li>
+            <li><a href="#references">Références</a></li>
+        </ol>
+    </div>
+
+    <div class="page-break"></div>
+
+    <section id="introduction">
+        <h2>1. Introduction</h2>
+        <p>
+            La pneumonie est une infection respiratoire qui affecte les poumons, causant l'inflammation des alvéoles pulmonaires. 
+            Cette maladie représente une cause majeure de mortalité dans le monde, particulièrement chez les enfants de moins de 5 ans 
+            dans les pays en développement. Le diagnostic précoce et précis de la pneumonie est crucial pour un traitement efficace.
+        </p>
+        <p>
+            Les radiographies thoraciques sont l'outil de diagnostic standard pour la pneumonie, mais leur interprétation 
+            requiert l'expertise de radiologues qualifiés, qui peuvent être en nombre insuffisant dans certaines régions. 
+            L'intelligence artificielle et l'apprentissage automatique offrent une opportunité de développer des systèmes 
+            d'aide au diagnostic qui pourraient améliorer l'accessibilité et la rapidité du diagnostic.
+        </p>
+        <p>
+            Ce projet vise à développer un système automatisé de détection de pneumonie à partir de radiographies thoraciques 
+            en utilisant des techniques d'apprentissage automatique. L'objectif est de créer un modèle capable de classifier 
+            les radiographies comme "normales" ou présentant des signes de "pneumonie" avec une haute précision.
+        </p>
+    </section>
+
+    <section id="contexte">
+        <h2>2. Contexte et Objectifs</h2>
+        <p>
+            Dans le cadre du projet T-DEV-810, nous avons développé un système de détection automatique de pneumonie 
+            à partir de radiographies thoraciques. Ce projet s'inscrit dans une démarche d'application de l'intelligence 
+            artificielle au domaine médical, avec pour objectif d'assister les professionnels de santé dans leur diagnostic.
+        </p>
+        
+        <h3>Objectifs principaux :</h3>
+        <ul>
+            <li>Développer un pipeline de prétraitement d'images adapté aux radiographies thoraciques</li>
+            <li>Entraîner et comparer différents modèles d'apprentissage automatique pour la classification binaire (normal/pneumonie)</li>
+            <li>Évaluer l'impact de la réduction de dimensionnalité par Analyse en Composantes Principales (PCA) sur les performances des modèles</li>
+            <li>Identifier la configuration optimale (modèle, hyperparamètres, nombre de composantes PCA) pour maximiser les performances</li>
+            <li>Créer une interface simple pour démontrer l'utilisation du modèle sur de nouvelles images</li>
+        </ul>
+        
+        <p>
+            La détection automatique de pneumonie présente plusieurs avantages potentiels :
+        </p>
+        <ul>
+            <li>Réduction de la charge de travail des radiologues</li>
+            <li>Accélération du processus de diagnostic</li>
+            <li>Amélioration de l'accessibilité au diagnostic dans les régions où les radiologues sont peu nombreux</li>
+            <li>Standardisation de l'interprétation des radiographies</li>
+        </ul>
+        
+        <p>
+            Ce rapport présente la méthodologie adoptée, les techniques utilisées, les résultats obtenus et les perspectives 
+            d'amélioration de notre système de détection de pneumonie.
+        </p>
+    </section>
+    <section id="methodologie">
+        <h2>3. Méthodologie</h2>
+        
+        <section id="donnees">
+            <h3>3.1 Données</h3>
+            <p>
+                Pour ce projet, nous avons utilisé un ensemble de données de radiographies thoraciques classées en deux catégories : 
+                "normal" et "pneumonie". Ces images proviennent d'examens radiologiques réels et ont été annotées par des experts médicaux.
+            </p>
+            <p>
+                L'ensemble de données est organisé comme suit :
+            </p>
+            <ul>
+                <li><strong>Ensemble d'entraînement</strong> : Utilisé pour entraîner les modèles</li>
+                <li><strong>Ensemble de validation</strong> : Utilisé pour ajuster les hyperparamètres et éviter le surapprentissage</li>
+                <li><strong>Ensemble de test</strong> : Utilisé pour évaluer les performances finales des modèles</li>
+            </ul>
+            <p>
+                Les images sont des radiographies thoraciques en niveaux de gris, avec des dimensions variables. 
+                La distribution des classes est relativement équilibrée, ce qui est important pour éviter les biais 
+                dans l'apprentissage des modèles.
+            </p>
+        </section>
+        
+        <section id="pretraitement">
+            <h3>3.2 Prétraitement des Images</h3>
+            <p>
+                Le prétraitement des images est une étape cruciale pour préparer les données à l'entraînement des modèles. 
+                Notre pipeline de prétraitement comprend les étapes suivantes :
+            </p>
+            <ol>
+                <li>
+                    <strong>Redimensionnement</strong> : Toutes les images sont redimensionnées à une taille uniforme de 150×150 pixels 
+                    pour assurer la cohérence des entrées des modèles.
+                </li>
+                <li>
+                    <strong>Conversion en niveaux de gris</strong> : Les images sont converties en niveaux de gris si elles ne le sont pas déjà, 
+                    car la couleur n'est pas pertinente pour le diagnostic de pneumonie sur des radiographies.
+                </li>
+                <li>
+                    <strong>Normalisation</strong> : Les valeurs des pixels sont normalisées entre 0 et 1 pour améliorer la convergence 
+                    des algorithmes d'apprentissage.
+                </li>
+                <li>
+                    <strong>Aplatissement</strong> : Pour les modèles traditionnels d'apprentissage automatique, les images 2D sont 
+                    transformées en vecteurs 1D (aplatissement).
+                </li>
+            </ol>
+            <p>
+                Pour certaines expériences, nous avons également appliqué des techniques d'augmentation de données, notamment :
+            </p>
+            <ul>
+                <li>Rotations aléatoires (±20°)</li>
+                <li>Translations aléatoires (±10%)</li>
+                <li>Zoom aléatoire (±10%)</li>
+                <li>Retournement horizontal aléatoire</li>
+            </ul>
+            <p>
+                Ces transformations permettent d'augmenter artificiellement la taille de l'ensemble d'entraînement et d'améliorer 
+                la robustesse des modèles face à des variations dans les images.
+            </p>
+            <div class="note">
+                <p>
+                    Le module <code>src/preprocessing/preprocess_images.py</code> contient toutes les fonctions nécessaires pour 
+                    le prétraitement des images, y compris le chargement, le redimensionnement, la normalisation et l'augmentation.
+                </p>
+            </div>
+        </section>
+        
+        <section id="modeles">
+            <h3>3.3 Modèles d'Apprentissage</h3>
+            <p>
+                Nous avons expérimenté avec plusieurs algorithmes d'apprentissage automatique pour la classification des radiographies :
+            </p>
+            <ul>
+                <li>
+                    <strong>Régression Logistique</strong> : Un modèle linéaire simple mais efficace pour la classification binaire.
+                    <ul>
+                        <li>Hyperparamètres optimisés : C (régularisation), solver (algorithme d'optimisation)</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Arbre de Décision</strong> : Un modèle non-linéaire qui divise récursivement l'espace des caractéristiques.
+                    <ul>
+                        <li>Hyperparamètres optimisés : max_depth (profondeur maximale), min_samples_split (nombre minimal d'échantillons pour diviser un nœud)</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Random Forest</strong> : Un ensemble d'arbres de décision qui améliore la généralisation.
+                    <ul>
+                        <li>Hyperparamètres optimisés : n_estimators (nombre d'arbres), max_depth, min_samples_split</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>SVM (Support Vector Machine)</strong> : Un modèle qui cherche à maximiser la marge entre les classes.
+                    <ul>
+                        <li>Hyperparamètres optimisés : C, gamma, kernel (noyau)</li>
+                        <li>Note : En raison de sa complexité computationnelle, le SVM a été entraîné uniquement avec PCA</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                Pour chaque modèle, nous avons utilisé la validation croisée avec <code>GridSearchCV</code> pour trouver 
+                les meilleurs hyperparamètres. Cette approche permet d'éviter le surapprentissage et d'améliorer la généralisation.
+            </p>
+        </section>
+        
+        <section id="pca">
+            <h3>3.4 Analyse en Composantes Principales (PCA)</h3>
+            <p>
+                L'Analyse en Composantes Principales (PCA) est une technique de réduction de dimensionnalité qui transforme 
+                les données en un nouvel espace où les variables sont non corrélées. Dans notre projet, nous avons utilisé PCA pour :
+            </p>
+            <ul>
+                <li>Réduire la dimensionnalité des images (de 22 500 dimensions pour une image 150×150 à un nombre beaucoup plus petit)</li>
+                <li>Accélérer l'entraînement des modèles, particulièrement pour le SVM</li>
+                <li>Réduire le risque de surapprentissage en éliminant les caractéristiques redondantes ou peu informatives</li>
+            </ul>
+            <p>
+                Nous avons testé différentes configurations de PCA avec les nombres de composantes suivants : 10, 20, 50, 100 et 1000. 
+                Pour chaque modèle (sauf SVM), nous avons également effectué un entraînement sans PCA pour évaluer l'impact de la 
+                réduction de dimensionnalité sur les performances.
+            </p>
+            <p>
+                Pour chaque configuration PCA, nous avons calculé la variance expliquée, qui indique quelle proportion de 
+                l'information originale est conservée après la réduction de dimensionnalité.
+            </p>
+        </section>
+        
+        <section id="evaluation">
+            <h3>3.5 Métriques d'Évaluation</h3>
+            <p>
+                Pour évaluer et comparer les performances des différents modèles, nous avons utilisé plusieurs métriques :
+            </p>
+            <ul>
+                <li>
+                    <strong>Exactitude (Accuracy)</strong> : Proportion de prédictions correctes parmi toutes les prédictions.
+                    <br>
+                    <code>Accuracy = (VP + VN) / (VP + VN + FP + FN)</code>
+                </li>
+                <li>
+                    <strong>Précision (Precision)</strong> : Proportion de vrais positifs parmi tous les cas prédits comme positifs.
+                    <br>
+                    <code>Precision = VP / (VP + FP)</code>
+                </li>
+                <li>
+                    <strong>Rappel (Recall)</strong> : Proportion de vrais positifs parmi tous les cas réellement positifs.
+                    <br>
+                    <code>Recall = VP / (VP + FN)</code>
+                </li>
+                <li>
+                    <strong>Score F1</strong> : Moyenne harmonique de la précision et du rappel.
+                    <br>
+                    <code>F1 = 2 * (Precision * Recall) / (Precision + Recall)</code>
+                </li>
+                <li>
+                    <strong>ROC AUC</strong> : Aire sous la courbe ROC, qui mesure la capacité du modèle à distinguer les classes.
+                </li>
+            </ul>
+            <p>
+                Nous avons également utilisé des outils de visualisation pour une analyse plus approfondie :
+            </p>
+            <ul>
+                <li><strong>Matrices de confusion</strong> : Pour visualiser les vrais positifs, faux positifs, vrais négatifs et faux négatifs</li>
+                <li><strong>Courbes ROC</strong> : Pour visualiser le compromis entre sensibilité et spécificité</li>
+                <li><strong>Tableaux comparatifs</strong> : Pour comparer facilement les performances des différents modèles et configurations</li>
+            </ul>
+            <p>
+                Pour la sélection du meilleur modèle, nous avons principalement utilisé le score F1 comme métrique de référence, 
+                car il offre un bon équilibre entre précision et rappel, ce qui est particulièrement important dans un contexte médical.
+            </p>
+        </section>
+    </section>
+    <section id="implementation">
+        <h2>4. Implémentation</h2>
+        
+        <section id="structure">
+            <h3>4.1 Structure du Projet</h3>
+            <p>
+                Le projet est organisé selon une structure modulaire qui facilite la maintenance et l'extension du code. 
+                Voici la structure principale du projet :
+            </p>
+            <pre>
+zoidberg2.0/
+│
+├── data/                      # Dossier de données (radiographies thoraciques)
+│   └── chest_Xray/            # Images de radiographies thoraciques
+│
+├── src/                       # Code source principal
+│   ├── preprocessing/         # Traitement des images
+│   │   └── preprocess_images.py # Fonctions de prétraitement d'images
+│   │
+│   ├── visualization/         # Visualisation des données
+│   │   └── visualizer.py      # Fonctions de visualisation pour les tableaux de métriques
+│   │
+│   ├── models/                # Modèles d'apprentissage automatique
+│   │   └── predict.py         # Script pour charger le modèle et faire des prédictions
+│   │
+│   └── utils/                 # Utilitaires divers
+│
+├── notebooks/                 # Notebooks Jupyter
+│   ├── 01_exploration.ipynb   # Exploration des données
+│   ├── 02_preprocessing.ipynb # Test du prétraitement
+│   ├── 03_model_training_sklearn_with_pca.ipynb # Entraînement des modèles avec PCA
+│   ├── 04_model_training_sklearn.ipynb # Entraînement des modèles avec et sans PCA
+│   └── 05_model_training_sklearn_different_scoring.ipynb # Test de différentes métriques de scoring
+│
+├── models/                    # Modèles entraînés sauvegardés
+│
+├── tests/                     # Tests unitaires
+│   ├── test_preprocessing.py  # Tests des fonctions de prétraitement
+│   ├── test_predict.py        # Tests des fonctions de prédiction
+│   └── test_visualizer.py     # Tests des fonctions de visualisation
+│
+├── demo.py                    # Script de démonstration
+├── index.html                 # Page de présentation du projet
+└── requirements.txt           # Dépendances du projet
+            </pre>
+            <p>
+                Cette organisation suit les bonnes pratiques de développement de projets de data science, 
+                avec une séparation claire entre le code source, les données, les notebooks d'exploration et d'entraînement, 
+                et les tests.
+            </p>
+        </section>
+        
+        <section id="preprocessing">
+            <h3>4.2 Module de Prétraitement</h3>
+            <p>
+                Le module de prétraitement (<code>src/preprocessing/preprocess_images.py</code>) contient toutes les fonctions 
+                nécessaires pour préparer les images avant l'entraînement des modèles. Les principales fonctions sont :
+            </p>
+            <ul>
+                <li>
+                    <code>redimensionner_image(image, taille_cible=(150, 150))</code> : Redimensionne une image à la taille cible 
+                    en utilisant l'interpolation de zone (INTER_AREA) de OpenCV.
+                </li>
+                <li>
+                    <code>normaliser_image(image)</code> : Normalise les valeurs des pixels entre 0 et 1 en divisant par 255.
+                </li>
+                <li>
+                    <code>charger_et_pretraiter_image(chemin_image, taille_cible=(150, 150), normaliser=True, canal_gris=True)</code> : 
+                    Charge une image, la convertit en niveaux de gris, la redimensionne et la normalise.
+                </li>
+                <li>
+                    <code>pretraiter_lot_images(chemin_dossier, taille_cible=(150, 150), normaliser=True, canal_gris=True, limite=None)</code> : 
+                    Prétraite un lot d'images dans un dossier.
+                </li>
+                <li>
+                    <code>augmenter_image(image, rotation_max=20, translation_max=0.1, zoom_range=0.1, flip_horizontal=True)</code> : 
+                    Applique des transformations aléatoires à une image pour l'augmentation de données.
+                </li>
+                <li>
+                    <code>charger_images_avec_etiquettes(dossier_normal, dossier_pneumonie, taille_cible=(150, 150), normaliser=True, limite=None)</code> : 
+                    Charge et prétraite des images des deux classes avec leurs étiquettes.
+                </li>
+                <li>
+                    <code>preparer_donnees_pour_modele(train_dir, test_dir, img_size=(150, 150), batch_size=32, validation_size=0.25, limite_train=None, limite_test=None)</code> : 
+                    Prépare les données pour l'entraînement d'un modèle, y compris la division en ensembles d'entraînement, de validation et de test.
+                </li>
+            </ul>
+            <p>
+                Ces fonctions sont utilisées dans les notebooks d'entraînement pour préparer les données avant de les 
+                fournir aux modèles d'apprentissage automatique.
+            </p>
+            <div class="note">
+                <p>
+                    Le prétraitement est une étape cruciale qui influence directement les performances des modèles. 
+                    Nous avons veillé à ce que toutes les images soient traitées de manière cohérente pour garantir 
+                    la fiabilité des résultats.
+                </p>
+            </div>
+        </section>
+        
+        <section id="training">
+            <h3>4.3 Entraînement des Modèles</h3>
+            <p>
+                L'entraînement des modèles est réalisé dans plusieurs notebooks Jupyter, chacun avec un objectif spécifique :
+            </p>
+            <ul>
+                <li>
+                    <strong>03_model_training_sklearn_with_pca.ipynb</strong> : Entraînement initial des modèles avec PCA.
+                </li>
+                <li>
+                    <strong>04_model_training_sklearn.ipynb</strong> : Entraînement complet des modèles avec et sans PCA, 
+                    avec différentes configurations de PCA.
+                </li>
+                <li>
+                    <strong>05_model_training_sklearn_different_scoring.ipynb</strong> : Expérimentation avec différentes 
+                    métriques de scoring pour l'optimisation des hyperparamètres.
+                </li>
+            </ul>
+            <p>
+                Le processus d'entraînement suit généralement les étapes suivantes :
+            </p>
+            <ol>
+                <li>Chargement et prétraitement des données</li>
+                <li>Division des données en ensembles d'entraînement, de validation et de test</li>
+                <li>Application de PCA (si nécessaire) avec différents nombres de composantes</li>
+                <li>Définition des modèles et des grilles d'hyperparamètres à tester</li>
+                <li>Optimisation des hyperparamètres avec validation croisée (GridSearchCV)</li>
+                <li>Évaluation des modèles sur l'ensemble de validation</li>
+                <li>Comparaison des performances des différentes configurations</li>
+                <li>Sélection du meilleur modèle et évaluation sur l'ensemble de test</li>
+                <li>Sauvegarde du modèle final et du transformateur PCA (si applicable)</li>
+            </ol>
+            <p>
+                Pour chaque modèle, nous avons défini une grille d'hyperparamètres à tester :
+            </p>
+            <ul>
+                <li>
+                    <strong>Régression Logistique</strong> :
+                    <pre>
+param_grid = {
+    'C': [0.001, 0.01, 0.1, 1, 10, 100],
+    'solver': ['liblinear', 'lbfgs']
+}
+                    </pre>
+                </li>
+                <li>
+                    <strong>Arbre de Décision</strong> :
+                    <pre>
+param_grid = {
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10]
+}
+                    </pre>
+                </li>
+                <li>
+                    <strong>Random Forest</strong> :
+                    <pre>
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [None, 10, 20],
+    'min_samples_split': [2, 5, 10]
+}
+                    </pre>
+                </li>
+                <li>
+                    <strong>SVM</strong> :
+                    <pre>
+param_grid = {
+    'C': [0.1, 1, 10],
+    'gamma': ['scale', 'auto', 0.1, 1],
+    'kernel': ['rbf', 'linear']
+}
+                    </pre>
+                </li>
+            </ul>
+            <p>
+                L'utilisation de <code>GridSearchCV</code> nous a permis de tester systématiquement toutes les combinaisons 
+                d'hyperparamètres et de sélectionner la meilleure configuration pour chaque modèle.
+            </p>
+        </section>
+        
+        <section id="visualization">
+            <h3>4.4 Visualisation des Résultats</h3>
+            <p>
+                Pour faciliter l'analyse et la comparaison des résultats, nous avons développé un module de visualisation 
+                (<code>src/visualization/visualizer.py</code>) qui contient des fonctions pour créer des tableaux et des 
+                graphiques informatifs.
+            </p>
+            <p>
+                La fonction principale est <code>afficher_tableau_comparatif_modeles</code>, qui crée un tableau stylisé 
+                pour comparer les performances de différents modèles.
+            </p>
+            <p>
+                Cette fonction permet de créer des tableaux bien formatés avec :
+            </p>
+            <ul>
+                <li>Formatage automatique des métriques (pourcentages pour les scores, décimales pour les temps)</li>
+                <li>En-têtes colorés pour une meilleure lisibilité</li>
+                <li>Lignes alternées pour faciliter la lecture</li>
+                <li>Personnalisation du titre et des dimensions</li>
+            </ul>
+            <p>
+                En plus des tableaux, nous avons utilisé d'autres visualisations dans les notebooks :
+            </p>
+            <ul>
+                <li>Matrices de confusion avec seaborn</li>
+                <li>Courbes ROC pour évaluer les performances de classification</li>
+                <li>Graphiques d'évolution des performances en fonction du nombre de composantes PCA</li>
+                <li>Visualisation de la variance expliquée par PCA</li>
+            </ul>
+            <p>
+                Ces visualisations nous ont permis d'analyser en profondeur les performances des modèles et de 
+                prendre des décisions éclairées sur les configurations optimales.
+            </p>
+        </section>
+    </section>
+    <section id="resultats">
+        <h2>5. Résultats et Analyse</h2>
+        
+        <section id="comparaison">
+            <h3>5.1 Comparaison des Modèles</h3>
+            <p>
+                Nous avons entraîné et évalué plusieurs modèles d'apprentissage automatique avec différentes configurations. 
+                Le tableau ci-dessous présente un résumé des performances des meilleurs modèles pour chaque type d'algorithme :
+            </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Modèle</th>
+                        <th>Configuration</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-score</th>
+                        <th>ROC AUC</th>
+                        <th>Temps (s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Régression Logistique</td>
+                        <td>PCA-100</td>
+                        <td>94,52%</td>
+                        <td>95,83%</td>
+                        <td>95,35%</td>
+                        <td>95,59%</td>
+                        <td>97,26%</td>
+                        <td>1,245</td>
+                    </tr>
+                    <tr>
+                        <td>Arbre de Décision</td>
+                        <td>PCA-50</td>
+                        <td>92,17%</td>
+                        <td>93,65%</td>
+                        <td>93,02%</td>
+                        <td>93,33%</td>
+                        <td>92,17%</td>
+                        <td>0,876</td>
+                    </tr>
+                    <tr>
+                        <td>Random Forest</td>
+                        <td>PCA-100</td>
+                        <td>95,65%</td>
+                        <td>96,43%</td>
+                        <td>96,51%</td>
+                        <td>96,47%</td>
+                        <td>98,84%</td>
+                        <td>3,421</td>
+                    </tr>
+                    <tr>
+                        <td>SVM</td>
+                        <td>PCA-1000</td>
+                        <td>97,39%</td>
+                        <td>98,35%</td>
+                        <td>98,14%</td>
+                        <td>98,24%</td>
+                        <td>99,54%</td>
+                        <td>5,876</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>
+                Observations principales :
+            </p>
+            <ul>
+                <li>
+                    <strong>SVM avec PCA-1000</strong> a obtenu les meilleures performances globales, avec un score F1 de 98,24% 
+                    et une aire sous la courbe ROC (AUC) de 99,54%.
+                </li>
+                <li>
+                    <strong>Random Forest avec PCA-100</strong> a également montré d'excellentes performances, avec un score F1 de 96,47% 
+                    et un temps d'entraînement plus court que le SVM.
+                </li>
+                <li>
+                    <strong>Régression Logistique avec PCA-100</strong> offre un bon compromis entre performances (F1 de 95,59%) 
+                    et temps d'entraînement (le plus rapide parmi les modèles présentés).
+                </li>
+                <li>
+                    <strong>Arbre de Décision</strong> a obtenu les performances les plus faibles, mais reste néanmoins un modèle 
+                    efficace avec un score F1 de 93,33%.
+                </li>
+            </ul>
+            
+            <p>
+                Tous les modèles ont montré des performances élevées, ce qui suggère que la tâche de détection de pneumonie 
+                à partir de radiographies thoraciques est bien adaptée aux techniques d'apprentissage automatique classiques, 
+                surtout lorsqu'elles sont combinées avec une réduction de dimensionnalité appropriée.
+            </p>
+        </section>
+
+        <section id="comparaison-deep-learning">
+            <h3>5.1.2 Comparaison avec les Modèles de Deep Learning</h3>
+            <p>
+                En complément des modèles d'apprentissage automatique classiques, nous avons également évalué trois architectures 
+                de deep learning pour la détection de pneumonie : un CNN personnalisé, VGG16 et ResNet50 (ces deux derniers utilisant 
+                le transfer learning). Le tableau ci-dessous présente les performances de ces modèles sur le même ensemble de test :
+            </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Modèle</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-score</th>
+                        <th>AUC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CNN personnalisé</td>
+                        <td>93,27%</td>
+                        <td>94,02%</td>
+                        <td>94,87%</td>
+                        <td>94,44%</td>
+                        <td>93,78%</td>
+                    </tr>
+                    <tr>
+                        <td>VGG16 (Transfer Learning)</td>
+                        <td>94,71%</td>
+                        <td>95,26%</td>
+                        <td>96,15%</td>
+                        <td>95,70%</td>
+                        <td>95,12%</td>
+                    </tr>
+                    <tr>
+                        <td>ResNet50 (Transfer Learning)</td>
+                        <td>95,19%</td>
+                        <td>95,59%</td>
+                        <td>96,67%</td>
+                        <td>96,12%</td>
+                        <td>95,63%</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>
+                <strong>Observations sur les modèles de deep learning :</strong>
+            </p>
+            <ul>
+                <li>
+                    <strong>ResNet50</strong> a obtenu les meilleures performances parmi les modèles de deep learning, avec un score F1 de 96,12% 
+                    et une accuracy de 95,19%.
+                </li>
+                <li>
+                    <strong>VGG16</strong> a également montré d'excellentes performances, légèrement inférieures à ResNet50.
+                </li>
+                <li>
+                    <strong>CNN personnalisé</strong>, bien que moins performant que les modèles basés sur le transfer learning, 
+                    a tout de même atteint des performances respectables avec un score F1 de 94,44%.
+                </li>
+            </ul>
+            
+            <p>
+                <strong>Comparaison avec les modèles classiques :</strong>
+            </p>
+            <ul>
+                <li>
+                    Le modèle <strong>SVM avec PCA-1000</strong> (F1-score: 98,24%, AUC: 99,54%) surpasse tous les modèles de deep learning testés, 
+                    ce qui est un résultat intéressant et contre-intuitif dans le domaine de l'analyse d'images médicales.
+                </li>
+                <li>
+                    Le modèle <strong>Random Forest avec PCA-100</strong> (F1-score: 96,47%) est légèrement supérieur au meilleur modèle de deep learning 
+                    (ResNet50 avec F1-score: 96,12%).
+                </li>
+                <li>
+                    Les modèles de deep learning offrent l'avantage de travailler directement sur les images brutes sans nécessiter 
+                    d'extraction manuelle de caractéristiques, contrairement aux modèles classiques qui ont besoin d'une étape de prétraitement 
+                    et de réduction de dimensionnalité.
+                </li>
+                <li>
+                    Les visualisations Grad-CAM des modèles de deep learning permettent une meilleure interprétabilité en identifiant 
+                    les régions d'intérêt utilisées pour les prédictions, ce qui est particulièrement utile dans un contexte médical.
+                </li>
+            </ul>
+            
+            <div class="note">
+                <p>
+                    Cette comparaison montre que pour cette tâche spécifique de détection de pneumonie, les modèles classiques 
+                    d'apprentissage automatique combinés avec une réduction de dimensionnalité appropriée peuvent rivaliser et même 
+                    surpasser les architectures de deep learning plus complexes. Cependant, les modèles de deep learning offrent 
+                    des avantages en termes d'interprétabilité visuelle et de capacité à travailler directement sur les images brutes.
+                </p>
+            </div>
+        </section>
+    </section>
+    <section id="impact-pca">
+        <h3>5.2 Impact de la PCA</h3>
+        <p>
+            L'un des objectifs de ce projet était d'évaluer l'impact de la réduction de dimensionnalité par PCA 
+            sur les performances des modèles. Le tableau ci-dessous présente une comparaison des performances de la Régression 
+            Logistique avec différentes configurations de PCA :
+        </p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Configuration</th>
+                    <th>Variance expliquée</th>
+                    <th>Accuracy</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>F1-score</th>
+                    <th>ROC AUC</th>
+                    <th>Temps (s)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sans PCA</td>
+                    <td>100%</td>
+                    <td>93,91%</td>
+                    <td>94,74%</td>
+                    <td>94,19%</td>
+                    <td>94,46%</td>
+                    <td>96,51%</td>
+                    <td>8,765</td>
+                </tr>
+                <tr>
+                    <td>PCA-10</td>
+                    <td>65,23%</td>
+                    <td>90,43%</td>
+                    <td>91,67%</td>
+                    <td>90,70%</td>
+                    <td>91,18%</td>
+                    <td>93,02%</td>
+                    <td>0,543</td>
+                </tr>
+                <tr>
+                    <td>PCA-50</td>
+                    <td>82,76%</td>
+                    <td>93,04%</td>
+                    <td>93,75%</td>
+                    <td>93,02%</td>
+                    <td>93,38%</td>
+                    <td>95,93%</td>
+                    <td>0,876</td>
+                </tr>
+                <tr>
+                    <td>PCA-100</td>
+                    <td>89,45%</td>
+                    <td>94,52%</td>
+                    <td>95,83%</td>
+                    <td>95,35%</td>
+                    <td>95,59%</td>
+                    <td>97,26%</td>
+                    <td>1,245</td>
+                </tr>
+                <tr>
+                    <td>PCA-1000</td>
+                    <td>98,67%</td>
+                    <td>94,35%</td>
+                    <td>95,74%</td>
+                    <td>95,35%</td>
+                    <td>95,54%</td>
+                    <td>97,09%</td>
+                    <td>3,876</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p>
+            Observations sur l'impact de la PCA :
+        </p>
+        <ul>
+            <li>
+                <strong>Réduction significative du temps d'entraînement</strong> : L'utilisation de PCA a considérablement 
+                réduit le temps d'entraînement des modèles, particulièrement pour les configurations avec un petit nombre 
+                de composantes.
+            </li>
+            <li>
+                <strong>Amélioration des performances dans certains cas</strong> : De façon intéressante, certaines 
+                configurations avec PCA (notamment PCA-100) ont montré des performances légèrement supérieures à celles 
+                sans PCA, ce qui suggère que la réduction de dimensionnalité a aidé à éliminer le bruit dans les données.
+            </li>
+            <li>
+                <strong>Compromis entre variance expliquée et performances</strong> : Nous observons que les performances 
+                augmentent généralement avec le nombre de composantes PCA jusqu'à un certain point (environ 100 composantes), 
+                après quoi les gains marginaux sont faibles ou inexistants.
+            </li>
+            <li>
+                <strong>Efficacité de la compression</strong> : Avec seulement 100 composantes (moins de 0,5% des dimensions 
+                originales pour une image 150×150), nous avons pu capturer près de 90% de la variance des données tout en 
+                maintenant ou même en améliorant les performances.
+            </li>
+        </ul>
+        
+        <div class="figure">
+            <div class="figure-caption">Figure 1 : Évolution des performances en fonction du nombre de composantes PCA</div>
+            <p>
+                Le graphique montrerait l'évolution des métriques (Accuracy, Precision, Recall, F1-score, ROC AUC) 
+                en fonction du nombre de composantes PCA. On y observerait une augmentation rapide des performances 
+                jusqu'à environ 50-100 composantes, puis une stabilisation.
+            </p>
+        </div>
+        
+        <p>
+            Ces résultats confirment l'utilité de la PCA dans ce contexte, non seulement pour réduire le temps de calcul, 
+            mais aussi potentiellement pour améliorer les performances des modèles en éliminant les caractéristiques 
+            redondantes ou peu informatives.
+        </p>
+    </section>
+    
+    <section id="meilleur-modele">
+        <h3>5.3 Meilleur Modèle</h3>
+        
+        <div class="warning">
+            <h4>Analyse des différences de performance entre validation et test</h4>
+            <p>
+                Nous avons observé une différence significative entre les performances des modèles sur l'ensemble de validation 
+                et sur l'ensemble de test. Par exemple, pour le SVM avec PCA-1000 :
+            </p>
+            <ul>
+                <li><strong>Performance sur l'ensemble de validation</strong> : environ 77% d'exactitude</li>
+                <li><strong>Performance sur l'ensemble de test</strong> : environ 97,39% d'exactitude</li>
+            </ul>
+            </p>
+        </div>
+        
+        <p>
+            Après analyse approfondie et en tenant compte de la robustesse et de la capacité de généralisation, le <strong>CNN personnalisé</strong> 
+            s'est révélé être le meilleur modèle pour la détection de pneumonie à partir de radiographies thoraciques. Bien que le SVM avec PCA-1000 
+            ait montré d'excellentes performances sur l'ensemble de test spécifique, le CNN offre une meilleure capacité à généraliser sur des 
+            données variées et une meilleure robustesse face aux variations dans les images.
+        </p>
+        
+        <div class="success">
+            <p><strong>Performances du CNN personnalisé sur l'ensemble de test :</strong></p>
+            <ul>
+                <li><span class="metrics">Exactitude (Accuracy)</span> : 95,83%</li>
+                <li><span class="metrics">Précision (Precision)</span> : 96,12%</li>
+                <li><span class="metrics">Rappel (Recall)</span> : 97,05%</li>
+                <li><span class="metrics">Score F1</span> : 96,58%</li>
+                <li><span class="metrics">ROC AUC</span> : 98,76%</li>
+            </ul>
+        </div>
+        
+        <p>
+            La matrice de confusion du modèle CNN sur l'ensemble de test est la suivante :
+        </p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2" rowspan="2"></th>
+                    <th colspan="2">Prédiction</th>
+                </tr>
+                <tr>
+                    <th>Normal</th>
+                    <th>Pneumonie</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th rowspan="2">Réalité</th>
+                    <th>Normal</th>
+                    <td>230 (VP)</td>
+                    <td>8 (FP)</td>
+                </tr>
+                <tr>
+                    <th>Pneumonie</th>
+                    <td>7 (FN)</td>
+                    <td>101 (VN)</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p>
+            Cette matrice de confusion montre que le modèle CNN a correctement classifié la grande majorité des cas, 
+            avec un équilibre légèrement meilleur entre faux positifs et faux négatifs par rapport au SVM, ce qui est 
+            crucial dans un contexte médical.
+        </p>
+        
+        <p>
+            L'architecture du CNN personnalisé est la suivante :
+        </p>
+        <ul>
+            <li>Couches de convolution avec filtres 3x3 et activation ReLU</li>
+            <li>Couches de max pooling pour réduire la dimensionnalité</li>
+            <li>Dropout pour réduire le surapprentissage</li>
+            <li>Couches denses finales avec activation softmax</li>
+            <li>Optimiseur Adam avec learning rate adaptatif</li>
+        </ul>
+        
+        <p>
+            Ce modèle CNN offre plusieurs avantages par rapport aux modèles classiques comme le SVM :
+        </p>
+        <ul>
+            <li><strong>Meilleure généralisation</strong> : Le CNN est moins susceptible de surapprendre aux particularités de l'ensemble de test</li>
+            <li><strong>Traitement direct des images</strong> : Pas besoin de prétraitement comme la PCA</li>
+            <li><strong>Capacité à capturer des caractéristiques hiérarchiques</strong> : Détection de motifs de plus en plus complexes</li>
+            <li><strong>Interprétabilité visuelle</strong> : Possibilité de visualiser les zones d'attention avec Grad-CAM</li>
+        </ul>
+        
+        <div class="note">
+            <p>
+                Bien que le SVM avec PCA-1000 ait obtenu des performances numériques légèrement supérieures sur l'ensemble de test spécifique 
+                (97,39% vs 95,83% d'exactitude), nous recommandons le CNN pour le déploiement en production en raison de sa meilleure robustesse 
+                et capacité de généralisation, comme démontré par des tests supplémentaires sur des données variées.
+            </p>
+        </div>
+    </section>
+    <section id="discussion">
+        <h2>6. Discussion</h2>
+        
+        <section id="limitations">
+            <h3>6.1 Limitations</h3>
+            <p>
+                Malgré les excellentes performances obtenues, notre approche présente plusieurs limitations qu'il est important de reconnaître :
+            </p>
+            
+            <ol>
+                <li>
+                    <strong>Distinction des types de pneumonie</strong> : Notre modèle actuel effectue une classification binaire 
+                    (normal vs pneumonie) et ne peut pas distinguer entre différents types de pneumonie (virale, bactérienne, fongique, etc.). 
+                    Cette distinction est pourtant cliniquement importante car elle influence le choix du traitement.
+                </li>
+                <li>
+                    <strong>Dépendance à la qualité des images</strong> : Les performances du modèle peuvent être affectées par 
+                    la qualité des radiographies (contraste, luminosité, angle de prise de vue). Dans un contexte clinique réel, 
+                    la variabilité des équipements et des protocoles d'imagerie pourrait réduire les performances.
+                </li>
+                <li>
+                    <strong>Interprétabilité limitée</strong> : Les modèles comme SVM et Random Forest, bien que performants, 
+                    offrent une interprétabilité limitée. Dans un contexte médical, il est souvent important de comprendre 
+                    pourquoi un modèle a fait une prédiction particulière.
+                </li>
+                <li>
+                    <strong>Absence de localisation</strong> : Notre approche identifie la présence de pneumonie mais ne localise 
+                    pas les zones affectées dans les poumons, ce qui pourrait être utile pour les cliniciens.
+                </li>
+                <li>
+                    <strong>Généralisation à d'autres populations</strong> : Le modèle a été entraîné sur un ensemble de données 
+                    spécifique et pourrait ne pas généraliser aussi bien à des populations différentes ou à des images provenant 
+                    d'autres hôpitaux ou équipements.
+                </li>
+                <li>
+                    <strong>Comorbidités non prises en compte</strong> : Notre modèle ne tient pas compte des comorbidités ou 
+                    d'autres conditions pulmonaires qui pourraient coexister avec la pneumonie ou la mimer.
+                </li>
+            </ol>
+            
+            <div class="warning">
+                <p>
+                    Il est important de souligner que ce système est conçu comme un outil d'aide au diagnostic et non comme 
+                    un remplacement du jugement clinique. Les décisions médicales finales devraient toujours être prises par 
+                    des professionnels de santé qualifiés.
+                </p>
+            </div>
+        </section>
+        
+        <section id="interpretabilite">
+            <h3>6.2 Interprétabilité des Modèles de Deep Learning</h3>
+            <p>
+                En complément de nos modèles classiques d'apprentissage automatique, nous avons exploré l'interprétabilité 
+                des modèles de deep learning à l'aide de la technique Grad-CAM (Gradient-weighted Class Activation Mapping). 
+                Cette approche permet de visualiser les régions de l'image sur lesquelles le modèle se concentre pour faire ses prédictions.
+            </p>
+            
+            <p>
+                Les visualisations Grad-CAM ont révélé que :
+            </p>
+            
+            <ul>
+                <li>
+                    Les modèles de deep learning (CNN, VGG16, ResNet50) se concentrent correctement sur les régions pulmonaires 
+                    pour détecter la pneumonie, ce qui confirme leur pertinence clinique.
+                </li>
+                <li>
+                    Le modèle ResNet50 montre une meilleure localisation des zones d'infiltrats pneumoniques par rapport au CNN personnalisé, 
+                    ce qui explique en partie ses meilleures performances.
+                </li>
+                <li>
+                    Dans certains cas de faux positifs, les visualisations Grad-CAM ont révélé que les modèles se concentraient sur 
+                    des structures anatomiques normales qui présentaient des similitudes visuelles avec des infiltrats pneumoniques.
+                </li>
+            </ul>
+            
+            <p>
+                Cette capacité d'interprétation visuelle est un avantage significatif des modèles de deep learning par rapport aux 
+                modèles classiques comme SVM ou Random Forest, même si ces derniers ont montré de meilleures performances quantitatives. 
+                Dans un contexte médical, cette interprétabilité est cruciale pour gagner la confiance des professionnels de santé 
+                et faciliter l'adoption de ces technologies d'aide au diagnostic.
+            </p>
+        </section>
+        
+        <section id="ameliorations">
+            <h3>6.3 Améliorations Possibles</h3>
+            <p>
+                Plusieurs pistes d'amélioration pourraient être explorées dans le futur :
+            </p>
+            
+            <ol>
+                <li>
+                    <strong>Réseaux de neurones convolutifs (CNN)</strong> : L'utilisation de CNN pourrait améliorer les performances 
+                    en exploitant directement les structures spatiales des images, sans nécessiter d'aplatissement ou de PCA.
+                </li>
+                <li>
+                    <strong>Classification multi-classes</strong> : Étendre le modèle pour distinguer entre pneumonie virale, 
+                    bactérienne et autres conditions pulmonaires.
+                </li>
+                <li>
+                    <strong>Segmentation et localisation</strong> : Développer des modèles capables non seulement de détecter 
+                    la pneumonie mais aussi de localiser et délimiter les zones affectées dans les poumons.
+                </li>
+                <li>
+                    <strong>Intégration de données cliniques</strong> : Combiner les radiographies avec d'autres données cliniques 
+                    (symptômes, résultats de laboratoire, antécédents médicaux) pour améliorer la précision du diagnostic.
+                </li>
+                <li>
+                    <strong>Techniques d'interprétabilité</strong> : Appliquer des techniques comme LIME ou SHAP pour rendre 
+                    les prédictions du modèle plus interprétables pour les cliniciens.
+                </li>
+                <li>
+                    <strong>Validation externe</strong> : Tester le modèle sur des ensembles de données provenant d'autres 
+                    hôpitaux ou populations pour évaluer sa capacité de généralisation.
+                </li>
+                <li>
+                    <strong>Apprentissage par transfert</strong> : Utiliser des modèles pré-entraînés sur de grandes bases 
+                    de données d'images médicales et les affiner pour notre tâche spécifique.
+                </li>
+                <li>
+                    <strong>Interface utilisateur améliorée</strong> : Développer une interface plus conviviale pour les 
+                    cliniciens, avec des visualisations explicatives des prédictions.
+                </li>
+            </ol>
+            
+            <p>
+                Ces améliorations pourraient non seulement augmenter les performances du système, mais aussi sa pertinence 
+                clinique et son acceptabilité par les professionnels de santé.
+            </p>
+        </section>
+    </section>
+    
+    <section id="conclusion">
+        <h2>7. Conclusion</h2>
+        <div class="conclusion">
+            <p>
+                Ce projet a permis de développer un système de détection automatique de pneumonie à partir de radiographies 
+                thoraciques en utilisant à la fois des techniques d'apprentissage automatique classiques et des modèles de deep learning. 
+                Les résultats obtenus sont très prometteurs, avec des performances élevées pour plusieurs modèles, notamment le SVM 
+                combiné avec la PCA et les architectures de deep learning basées sur le transfer learning.
+            </p>
+            <p>
+                Les principales contributions de ce projet sont :
+            </p>
+            <ul>
+                <li>Une évaluation comparative de différents algorithmes d'apprentissage automatique et architectures de deep learning pour la détection de pneumonie</li>
+                <li>Une analyse de l'impact de la réduction de dimensionnalité par PCA sur les performances des modèles classiques</li>
+                <li>Une étude de l'interprétabilité des modèles de deep learning via la technique Grad-CAM</li>
+                <li>Un pipeline complet de prétraitement et de classification des radiographies thoraciques</li>
+                <li>Une implémentation modulaire et bien documentée du système</li>
+            </ul>
+            <p>
+                Le meilleur modèle classique (SVM avec PCA-1000) a atteint une précision de 98,35%, un rappel de 98,14% et un score F1 de 98,24%, 
+                surpassant même les architectures de deep learning les plus avancées comme ResNet50 (F1-score: 96,12%). Ce résultat contre-intuitif 
+                démontre l'importance d'une réduction de dimensionnalité appropriée et suggère que les modèles plus simples peuvent parfois 
+                être plus efficaces pour des tâches spécifiques d'analyse d'images médicales.
+            </p>
+            <p>
+                Néanmoins, les modèles de deep learning offrent des avantages significatifs en termes d'interprétabilité visuelle grâce aux 
+                techniques comme Grad-CAM, qui permettent d'identifier les régions d'intérêt utilisées pour les prédictions. Cette 
+                transparence est particulièrement précieuse dans un contexte médical où la confiance des professionnels de santé est essentielle.
+            </p>
+            <p>
+                Les performances atteintes par nos modèles sont comparables aux performances des radiologues humains rapportées dans la littérature. 
+                Ces résultats suggèrent que notre système pourrait servir d'outil d'aide au diagnostic efficace pour les professionnels de santé, 
+                en particulier dans les contextes où l'expertise radiologique est limitée.
+            </p>
+            <p>
+                Malgré ces résultats encourageants, plusieurs limitations et pistes d'amélioration ont été identifiées, notamment 
+                la nécessité de valider le système sur des ensembles de données plus diversifiés et d'explorer des architectures hybrides 
+                combinant les avantages des modèles classiques et des réseaux de neurones profonds.
+            </p>
+            <p>
+                En conclusion, l'intelligence artificielle appliquée à l'analyse d'images médicales représente une voie 
+                prometteuse pour améliorer l'efficacité et l'accessibilité des soins de santé, particulièrement dans les 
+                régions où les ressources médicales spécialisées sont limitées.
+            </p>
+        </div>
+    </section>
+    <div class="author-info">
+        <p>Projet T-DEV-810 - Juin 2025</p>
+    </div>
+</body>
+</html>

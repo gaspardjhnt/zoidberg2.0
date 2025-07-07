@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparaison des Modèles - Détection de Pneumonie</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-top: 1.5em;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 1em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5em;
+        }
+        h2 {
+            font-size: 1.8em;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.3em;
+        }
+        p {
+            margin-bottom: 1.2em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #4993D2;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f1f1f2;
+        }
+        .highlight {
+            background-color: #e3f2fd;
+            font-weight: bold;
+        }
+        .best {
+            background-color: #e8f5e9;
+            font-weight: bold;
+        }
+        .summary {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 30px 0;
+        }
+        .header-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .conclusion {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-logo">
+        <h1>Comparaison des Modèles pour la Détection de Pneumonie</h1>
+        <p><strong>Projet T-DEV-810 - Epitech</strong></p>
+    </div>
+
+    <div class="summary">
+        <h2>Résumé des Résultats</h2>
+        <p>
+            Ce document présente une comparaison synthétique des performances des différents modèles testés pour la détection 
+            de pneumonie à partir de radiographies thoraciques. Notre analyse montre que <strong>VGG16</strong> est le modèle 
+            le plus performant, offrant le meilleur équilibre entre sensibilité clinique et capacité de généralisation.
+        </p>
+    </div>
+
+    <h2>Comparaison des Modèles de Deep Learning</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Métrique</th>
+                <th>CNN Personnalisé</th>
+                <th class="highlight">VGG16</th>
+                <th>ResNet50</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Exactitude (Accuracy)</td>
+                <td>84,0%</td>
+                <td class="best">88,8%</td>
+                <td>87,2%</td>
+            </tr>
+            <tr>
+                <td>Précision (Precision)</td>
+                <td>85,3%</td>
+                <td>86,2%</td>
+                <td class="best">89,5%</td>
+            </tr>
+            <tr>
+                <td>Rappel (Recall)</td>
+                <td>80,8%</td>
+                <td class="best">97,4%</td>
+                <td>82,1%</td>
+            </tr>
+            <tr>
+                <td>Score F1</td>
+                <td>83,0%</td>
+                <td class="best">91,5%</td>
+                <td>85,6%</td>
+            </tr>
+            <tr>
+                <td>ROC AUC</td>
+                <td>95,2%</td>
+                <td class="best">96,3%</td>
+                <td>94,8%</td>
+            </tr>
+            <tr>
+                <td>Temps d'inférence (ms)</td>
+                <td class="best">21</td>
+                <td>42</td>
+                <td>35</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Comparaison avec les Modèles Classiques</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Modèle</th>
+                <th>Configuration</th>
+                <th>Accuracy</th>
+                <th>F1-score</th>
+                <th>ROC AUC</th>
+                <th>Temps d'inférence (ms)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Régression Logistique</td>
+                <td>PCA-100</td>
+                <td>74,35%</td>
+                <td>83,27%</td>
+                <td>89,45%</td>
+                <td class="best">12</td>
+            </tr>
+            <tr>
+                <td>Arbre de Décision</td>
+                <td>PCA-50</td>
+                <td>73,91%</td>
+                <td>81,45%</td>
+                <td>87,23%</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>Random Forest</td>
+                <td>PCA-100</td>
+                <td>76,52%</td>
+                <td>82,18%</td>
+                <td>91,67%</td>
+                <td>28</td>
+            </tr>
+            <tr>
+                <td>SVM</td>
+                <td>PCA-1000</td>
+                <td>77,83%</td>
+                <td>84,67%</td>
+                <td>92,54%</td>
+                <td>32</td>
+            </tr>
+            <tr class="highlight">
+                <td>VGG16</td>
+                <td>Transfer Learning</td>
+                <td class="best">88,8%</td>
+                <td class="best">91,5%</td>
+                <td class="best">96,3%</td>
+                <td>42</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Matrice de Confusion - VGG16</h2>
+    
+    <table>
+        <thead>
+            <tr>
+                <th colspan="2" rowspan="2"></th>
+                <th colspan="2">Prédiction</th>
+            </tr>
+            <tr>
+                <th>Normal</th>
+                <th>Pneumonie</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th rowspan="2">Réalité</th>
+                <th>Normal</th>
+                <td>35 (VN, 28,0%)</td>
+                <td>12 (FP, 9,6%)</td>
+            </tr>
+            <tr>
+                <th>Pneumonie</th>
+                <td>2 (FN, 1,6%)</td>
+                <td>76 (VP, 60,8%)</td>
+            </tr>
+        </tbody>
+    </table>
+    
+
+    <div class="conclusion">
+        <h2>Conclusion</h2>
+        <p>
+            <strong>VGG16</strong> surpasse significativement tous les modèles classiques et offre les meilleures performances 
+            parmi les modèles de deep learning testés. Bien que légèrement plus lent que certains modèles classiques pour l'inférence, 
+            son gain en sensibilité (plus de 11% d'amélioration d'exactitude par rapport au meilleur modèle classique) justifie largement 
+            ce compromis pour une application médicale critique comme la détection de pneumonie.
+        </p>
+        <p>
+            Les avantages clés de VGG16 incluent :
+        </p>
+        <ul>
+            <li>Excellente sensibilité (97,4%) permettant de minimiser les faux négatifs</li>
+            <li>Robustesse et stabilité face à la variabilité des données</li>
+            <li>Architecture profonde avec filtres de convolution efficaces</li>
+            <li>Bon équilibre entre performance et coût computationnel</li>
+        </ul>
+    </div>
+
+    <p style="text-align: center; margin-top: 40px; color: #7f8c8d;">
+        Projet T-DEV-810 - Epitech - 2025
+    </p>
+</body>
+</html>

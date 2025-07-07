@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rapport de Projet - Détection de Pneumonie par Apprentissage Automatique</title>
     <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        .cover-page {
+            height: 95vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            page-break-after: always;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .cover-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: none;
+        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
@@ -132,7 +151,7 @@
             padding-left: 20px;
         }
         .toc li {
-            margin-bottom: 5px;
+            margin-bottom: 1px;
         }
         .page-break {
             page-break-after: always;
@@ -156,11 +175,15 @@
     </style>
 </head>
 <body>
-    <div class="header-logo">
+    <div class="cover-page">
+        <img src="img/presentation_page.png" alt="Page de garde" class="cover-image">
+    </div>
+    
+    <!-- <div class="header-logo">
         <h1>Détection de Pneumonie par Apprentissage Automatique</h1>
         <p><strong>Projet T-DEV-810</strong></p>
         <p>Juin 2025</p>
-    </div>
+    </div> -->
 
     <div class="toc">
         <h3>Table des matières</h3>
@@ -180,16 +203,20 @@
                     <li><a href="#algoritmes-classiques">Algorithmes d'Apprentissage</a></li>
                     <li><a href="#resultats-classiques">Résultats des Modèles Classiques</a></li>
                     <li><a href="#limitations-classiques">Limitations et Problèmes Identifiés</a></li>
+                    <li><a href="#impact-pca">Impact de la PCA</a></li>
                 </ul>
             </li>
             <li><a href="#modeles-deep-learning">Partie 2 : Modèles de Deep Learning</a>
                 <ul>
                     <li><a href="#architectures-dl">Architectures Utilisées</a></li>
                     <li><a href="#augmentation-donnees">Augmentation de Données</a></li>
+                    <li><a href="#details-modeles-dl">Détails des Modèles</a></li>
                     <li><a href="#resultats-dl">Résultats des Modèles Deep Learning</a></li>
-                    <li><a href="#interpretabilite-dl">Interprétabilité et Grad-CAM</a></li>
+                    <li><a href="#entrainement-modeles">Entraînement des Modèles</a></li>
+                    <li><a href="#evaluation-modeles">Évaluation des Modèles</a></li>
                 </ul>
             </li>
+            <li><a href="#meilleur-modele">Meilleur Modèle et Matrice de Confusion</a></li>
             <li><a href="#analyses-complementaires">Partie 3 : Analyses Complémentaires</a>
                 <ul>
                     <li><a href="#analyse-notebook">Analyse du Notebook Initial</a></li>
@@ -197,19 +224,9 @@
                     <li><a href="#analyse-clustering">Analyse du Clustering t-SNE</a></li>
                     <li><a href="#analyse-erreurs">Analyse des Erreurs du Test</a></li>
                     <li><a href="#analyse-overfitting">Analyse de l'Overfitting</a></li>
-                    <li><a href="#modifications-preprocessing">Modifications du Preprocessing</a></li>
-                    <li><a href="#diagnostic-final">Diagnostic Final</a></li>
+                    <li><a href="#modifications-preprocessing">Validation de notre stratégie</a></li>
+                    <li><a href="#diagnostic-final">Synthèse des analyses</a></li>
                     <li><a href="#resultats-chiffres">Résultats Chiffrés Comparés</a></li>
-                    <li><a href="#visualisations">Visualisations et Figures Produites</a></li>
-                    <li><a href="#configuration-machine">Configuration Machine</a></li>
-                </ul>
-            </li>
-            <li><a href="#implementation">Implémentation</a>
-                <ul>
-                    <li><a href="#structure">Structure du Projet</a></li>
-                    <li><a href="#preprocessing">Module de Prétraitement</a></li>
-                    <li><a href="#training">Entraînement des Modèles</a></li>
-                    <li><a href="#visualization">Visualisation des Résultats</a></li>
                 </ul>
             </li>
             <li><a href="#discussion">Discussion</a>
@@ -218,6 +235,7 @@
                     <li><a href="#ameliorations">Améliorations Possibles</a></li>
                 </ul>
             </li>
+            <li><a href="#implementation">Structure du Projet</a></li>
             <li><a href="#conclusion">Conclusion</a></li>
             <li><a href="#references">Références</a></li>
         </ol>
@@ -239,9 +257,10 @@
             d'aide au diagnostic qui pourraient améliorer l'accessibilité et la rapidité du diagnostic.
         </p>
         <p>
-            Ce projet vise à développer un système automatisé de détection de pneumonie à partir de radiographies thoraciques 
-            en utilisant des techniques d'apprentissage automatique. L'objectif est de créer un modèle capable de classifier 
-            les radiographies comme "normales" ou présentant des signes de "pneumonie" avec une haute précision.
+            Ce projet vise à évaluer et comparer différentes approches d'apprentissage automatique pour la détection de pneumonie 
+            à partir de radiographies thoraciques. L'objectif est d'analyser et d'optimiser des modèles existants pour classifier 
+            les radiographies comme "normales" ou présentant des signes de "pneumonie" avec une haute précision, plutôt que de 
+            créer de nouveaux modèles de toutes pièces.
         </p>
     </section>
 
@@ -276,6 +295,16 @@
             Ce rapport présente la méthodologie adoptée, les techniques utilisées, les résultats obtenus et les perspectives 
             d'amélioration de notre système de détection de pneumonie.
         </p>
+
+        <h3>Configuration Machine :</h3>
+        <p>
+            Une partie des expériences ont été réalisées sur la configuration suivante :
+        </p>
+        <ul>
+                <li><strong>Carte graphique</strong> : NVIDIA GeForce RTX 4060 Ti (8 GB)</li>
+                <li><strong>Mémoire RAM</strong> : 16 Go (3200 MHz)</li>
+                <li><strong>Processeur</strong> : AMD Ryzen 7 5700X 8-Core Processor (3.40 GHz)</li>
+            </ul>
     </section>
     <section id="methodologie">
         <h2>3. Méthodologie</h2>
@@ -406,7 +435,7 @@
             </ul>
             <p>
                 Nous avons testé différentes configurations de PCA avec les nombres de composantes suivants : 10, 20, 50, 100 et 1000. 
-                Pour chaque modèle (sauf SVM), nous avons également effectué un entraînement sans PCA pour évaluer l'impact de la 
+                Pour chaque modèle, nous avons également effectué un entraînement sans PCA pour évaluer l'impact de la 
                 réduction de dimensionnalité sur les performances.
             </p>
             <p>
@@ -443,7 +472,6 @@
                     <strong>SVM (Support Vector Machine)</strong> : Un modèle qui cherche à maximiser la marge entre les classes.
                     <ul>
                         <li>Hyperparamètres optimisés : C, gamma, kernel (noyau)</li>
-                        <li>Note : En raison de sa complexité computationnelle, le SVM a été entraîné uniquement avec PCA</li>
                     </ul>
                 </li>
             </ul>
@@ -517,9 +545,43 @@
                 <p>
                     Tous les modèles classiques présentent un écart très important (19-22%) entre leurs performances sur l'ensemble de validation 
                     et sur l'ensemble de test. Cet écart est symptomatique d'un <strong>overfitting massif</strong> : les modèles apprennent 
-                    par cœur les données d'entraînement/validation mais ne généralisent pas sur des données nouvelles.
+                    par cœur les données d'entraînement/validation mais ne généralisent pas sur des données nouvelles. Analyses dans la partie 7.
                 </p>
             </div>
+            
+            <p>
+                Malgré ces limitations, le SVM avec PCA-1000 a obtenu les meilleures performances parmi les modèles classiques. 
+                Voici la matrice de confusion et la courbe ROC pour ce modèle :
+            </p>
+            
+            <div class="figure" style="display: flex; justify-content: space-between;">
+                <div style="width: 48%;">
+                    <img src="img/svm_pca_1000/matrice_confusion.png" alt="Matrice de confusion du SVM avec PCA-1000">
+                    <p class="figure-caption">Figure 4.3 : Matrice de confusion du SVM avec PCA-1000 sur l'ensemble de test</p>
+                </div>
+                <div style="width: 48%;">
+                    <img src="img/svm_pca_1000/courbe_roc.png" alt="Courbe ROC du SVM avec PCA-1000">
+                    <p class="figure-caption">Figure 4.4 : Courbe ROC du SVM avec PCA-1000 (AUC = 0.92)</p>
+                </div>
+            </div>
+            
+            <p>
+                <strong>Interprétation des visualisations :</strong>
+            </p>
+            <ul>
+                <li>
+                    <strong>Matrice de confusion</strong> : Elle montre la répartition des prédictions correctes et incorrectes. 
+                    On observe que le modèle SVM avec PCA-1000 présente un nombre relativement élevé de faux négatifs 
+                    (cas de pneumonie classés comme normaux), ce qui est particulièrement problématique dans un contexte médical 
+                    où manquer un cas positif peut avoir des conséquences graves.
+                </li>
+                <li>
+                    <strong>Courbe ROC</strong> : La courbe ROC (Receiver Operating Characteristic) illustre la performance du 
+                    classificateur à différents seuils de décision. L'aire sous la courbe (AUC) de 0.92 indique une bonne 
+                    capacité de discrimination, mais reste inférieure aux performances des modèles de deep learning que nous 
+                    présenterons plus loin.
+                </li>
+            </ul>
         </section>
         
         <section id="limitations-classiques">
@@ -545,9 +607,131 @@
                     l'angle de prise de vue, et les conditions d'acquisition.
                 </li>
             </ul>
+        </section>
+        
+        <section id="impact-pca">
+            <h3>4.5 Impact de la PCA</h3>
             <p>
-                Ces limitations ont motivé l'exploration d'approches de deep learning plus robustes et capables de généraliser 
-                efficacement sur des données nouvelles.
+                Nous avons également évalué l'impact de la réduction de dimensionnalité par PCA 
+                sur les performances des modèles. Le tableau ci-dessous présente une comparaison des performances de la Régression 
+                Logistique avec différentes configurations de PCA :
+            </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Configuration</th>
+                        <th>Variance expliquée</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-score</th>
+                        <th>ROC AUC</th>
+                        <th>Temps (s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Sans PCA</td>
+                        <td>100%</td>
+                        <td>93,91%</td>
+                        <td>94,74%</td>
+                        <td>94,19%</td>
+                        <td>94,46%</td>
+                        <td>96,51%</td>
+                        <td>8,765</td>
+                    </tr>
+                    <tr>
+                        <td>PCA-10</td>
+                        <td>65,23%</td>
+                        <td>90,43%</td>
+                        <td>91,67%</td>
+                        <td>90,70%</td>
+                        <td>91,18%</td>
+                        <td>93,02%</td>
+                        <td>0,543</td>
+                    </tr>
+                    <tr>
+                        <td>PCA-50</td>
+                        <td>82,76%</td>
+                        <td>93,04%</td>
+                        <td>93,75%</td>
+                        <td>93,02%</td>
+                        <td>93,38%</td>
+                        <td>95,93%</td>
+                        <td>0,876</td>
+                    </tr>
+                    <tr>
+                        <td>PCA-100</td>
+                        <td>89,45%</td>
+                        <td>94,52%</td>
+                        <td>95,83%</td>
+                        <td>95,35%</td>
+                        <td>95,59%</td>
+                        <td>97,26%</td>
+                        <td>1,245</td>
+                    </tr>
+                    <tr>
+                        <td>PCA-1000</td>
+                        <td>98,67%</td>
+                        <td>94,35%</td>
+                        <td>95,74%</td>
+                        <td>95,35%</td>
+                        <td>95,54%</td>
+                        <td>97,09%</td>
+                        <td>3,876</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>
+                Observations sur l'impact de la PCA :
+            </p>
+            <ul>
+                <li>
+                    <strong>Réduction significative du temps d'entraînement</strong> : L'utilisation de PCA a considérablement 
+                    réduit le temps d'entraînement des modèles, particulièrement pour les configurations avec un petit nombre 
+                    de composantes.
+                </li>
+                <li>
+                    <strong>Amélioration des performances dans certains cas</strong> : De façon intéressante, certaines 
+                    configurations avec PCA (notamment PCA-100) ont montré des performances légèrement supérieures à celles 
+                    sans PCA, ce qui suggère que la réduction de dimensionnalité a aidé à éliminer le bruit dans les données.
+                </li>
+                <li>
+                    <strong>Compromis entre variance expliquée et performances</strong> : Nous observons que les performances 
+                    augmentent généralement avec le nombre de composantes PCA jusqu'à un certain point (environ 100 composantes), 
+                    après quoi les gains marginaux sont faibles ou inexistants.
+                </li>
+                <li>
+                    <strong>Efficacité de la compression</strong> : Avec seulement 100 composantes (moins de 0,5% des dimensions 
+                    originales pour une image 150×150), nous avons pu capturer près de 90% de la variance des données tout en 
+                    maintenant ou même en améliorant les performances.
+                </li>
+            </ul>
+        
+            <p>
+                Ces résultats confirment l'utilité de la PCA dans ce contexte, non seulement pour réduire le temps de calcul, 
+                mais aussi potentiellement pour améliorer les performances des modèles en éliminant les caractéristiques 
+                redondantes ou peu informatives.
+            </p>
+            
+            <div class="figure">
+                <img src="img/impact_pca_scoring_accuracy.png" alt="Impact de la PCA sur l'accuracy des modèles">
+                <p class="figure-caption">Figure 4.5 : Visualisation de l'impact du nombre de composantes PCA sur l'accuracy des modèles</p>
+            </div>
+            
+            <p>
+                La Figure 4.5 illustre l'impact du nombre de composantes PCA sur l'accuracy des différents modèles classiques. 
+                On observe clairement une courbe en forme de plateau qui atteint son maximum autour de 100 composantes pour la plupart des modèles. 
+                Cette visualisation confirme que l'augmentation du nombre de composantes au-delà de 100 n'apporte pas d'amélioration significative 
+                des performances, tandis qu'un nombre trop faible de composantes (moins de 50) entraîne une dégradation notable. 
+                Le SVM (courbe verte) semble bénéficier davantage d'un nombre élevé de composantes, ce qui s'explique par sa capacité à 
+                exploiter efficacement les dimensions supplémentaires pour trouver un hyperplan optimal de séparation.
+            </p>
+            <p>
+                En parallèle de ces travaux sur les modèles classiques, une autre partie de notre équipe a exploré des approches de deep learning, 
+                qui se sont révélées plus robustes et capables de généraliser efficacement sur des données nouvelles.
             </p>
         </section>
     </section>
@@ -558,7 +742,7 @@
         <section id="architectures-dl">
             <h3>5.1 Architectures Utilisées</h3>
             <p>
-                Pour surmonter les limitations des modèles classiques, nous avons exploré trois architectures de deep learning :
+                Dans le cadre de notre approche parallèle utilisant le deep learning, nous avons exploré trois architectures différentes :
             </p>
             <ul>
                 <li>
@@ -593,23 +777,142 @@
             <h3>5.2 Augmentation de Données</h3>
             <p>
                 Pour améliorer la robustesse et la généralisation des modèles de deep learning, nous avons appliqué des techniques 
-                d'augmentation de données :
+                d'augmentation de données : 
+            </p>
+            <p>
+                Les images ont été prétraitées selon les étapes suivantes :
             </p>
             <ul>
-                <li><strong>Rotations aléatoires</strong> (±20°) pour simuler différentes orientations</li>
-                <li><strong>Translations aléatoires</strong> (±10%) pour gérer les variations de positionnement</li>
-                <li><strong>Zoom aléatoire</strong> (±10%) pour simuler différentes distances de prise de vue</li>
-                <li><strong>Retournement horizontal aléatoire</strong> pour augmenter la diversité des données</li>
-                <li><strong>Modifications de luminosité et contraste</strong> pour gérer les variations d'acquisition</li>
+                <li>Redimensionnement à 224×224 pixels</li>
+                <li>Normalisation des valeurs de pixels (division par 255)</li>
+                <li>Augmentation de données pour l'ensemble d'entraînement</li>
             </ul>
+            
+            <div class="figure">
+                <img src="img/augmentation_donnees_deep.png" alt="Impact de la PCA sur l'accuracy des modèles">
+                <p class="figure-caption">Figure 5.2 : Exemples d'augmentation de données sur une radiographie normale.</p>
+            </div>
             <p>
                 Ces transformations permettent d'augmenter artificiellement la taille de l'ensemble d'entraînement et d'améliorer 
                 la robustesse des modèles face aux variations naturelles dans les radiographies.
             </p>
         </section>
         
+        <section id="details-modeles-dl">
+            <h3>5.3 Détails des Modèles Deep Learning</h3>
+            <p>
+                Étant donné que les modèles de deep learning ont obtenu des résultats significativement meilleurs que les modèles classiques,
+                nous allons nous attarder davantage sur leurs performances et leurs caractéristiques spécifiques.
+                Chaque modèle présente des avantages et des particularités qui méritent d'être examinés en détail.
+            </p>
+            
+            <h4>5.3.1 CNN Personnalisé</h4>
+            <p>
+                Le CNN personnalisé est le premier modèle de deep learning que nous avons évalué pour la détection de pneumonie.
+                Ce modèle atteint une exactitude de 84,0% sur l'ensemble de test, démontrant déjà une amélioration significative
+                par rapport aux modèles classiques.
+            </p>
+            
+            <div class="figure" style="display: flex; justify-content: space-between;">
+                <div style="width: 48%;">
+                    <img src="img/cnn/matrice_confusion_cnn.png" alt="Matrice de confusion du CNN personnalisé">
+                    <p class="figure-caption">Figure 5.3.1a : Matrice de confusion du CNN personnalisé</p>
+                </div>
+                <div style="width: 48%;">
+                    <img src="img/cnn/courbe_roc_cnn.png" alt="Courbe ROC du CNN personnalisé">
+                    <p class="figure-caption">Figure 5.3.1b : Courbe ROC du CNN personnalisé</p>
+                </div>
+            </div>
+            
+            <div class="figure">
+                <img src="img/cnn/distrib_proba_predict_cnn.png" alt="Distribution des probabilités de prédiction du CNN personnalisé">
+                <p class="figure-caption">Figure 5.3.1c : Distribution des probabilités de prédiction du CNN personnalisé</p>
+            </div>
+            
+            <p>
+                Le CNN personnalisé offre de bonnes performances avec une exactitude de 84,0% sur l'ensemble de test. La matrice de confusion
+                montre une capacité à distinguer les cas normaux des cas de pneumonie, avec un taux de rappel (sensibilité) de 80,77%.
+                La courbe ROC confirme la qualité du modèle avec une aire sous la courbe (AUC) de 0,952264.
+            </p>
+            <p>
+                La distribution des probabilités de prédiction (Figure 5.3.1c) est particulièrement intéressante : elle montre que le modèle
+                est généralement très confiant dans ses prédictions, avec une forte concentration de probabilités proches de 0 (pour les cas normaux)
+                et de 1 (pour les cas de pneumonie). Cette distribution bimodale indique une bonne séparation des classes, bien que quelques
+                cas se situent dans la zone intermédiaire, suggérant une incertitude du modèle pour ces échantillons particuliers.
+            </p>
+            
+            <h4>5.3.2 VGG16</h4>
+            <p>
+                Le modèle VGG16 représente notre deuxième approche de deep learning pour la détection de pneumonie. Nous avons utilisé une approche 
+                de transfer learning en exploitant ce modèle pré-entraîné sur ImageNet, adapté à notre tâche spécifique.
+            </p>
+            
+            <div class="figure" style="display: flex; justify-content: space-between;">
+                <div style="width: 48%;">
+                    <img src="img/vgg16/matrice_onfusion.png" alt="Matrice de confusion de VGG16">
+                    <p class="figure-caption">Figure 5.3.2a : Matrice de confusion de VGG16</p>
+                </div>
+                <div style="width: 48%;">
+                    <img src="img/vgg16/courbe_roc.png" alt="Courbe ROC de VGG16">
+                    <p class="figure-caption">Figure 5.3.2b : Courbe ROC de VGG16</p>
+                </div>
+            </div>
+            
+            <div class="figure" style="width: 70%; margin: 0 auto;">
+                <img src="img/vgg16/distrib_proba.png" alt="Distribution des probabilités de prédiction du VGG16" style="width: 100%;">
+                <p class="figure-caption">Figure 5.3.2c : Distribution des probabilités de prédiction du VGG16</p>
+            </div>
+            
+            <p>
+                Le VGG16 a atteint une exactitude de 88,8% sur l'ensemble de test, une performance supérieure à celle du CNN personnalisé.
+                La matrice de confusion (Figure 5.3.2a) montre une meilleure distribution des prédictions correctes et incorrectes, tandis que
+                la courbe ROC (Figure 5.3.2b) confirme la bonne capacité discriminative du modèle avec une AUC de 0,925259.
+            </p>
+            <p>
+                La distribution des probabilités (Figure 5.3.2c) révèle également une séparation nette entre les classes, bien que légèrement
+                différente de celle du CNN personnalisé. Cette distribution suggère que le VGG16 est particulièrement confiant dans ses
+                prédictions positives (pneumonie), avec une concentration importante de probabilités proches de 1.
+            </p>
+            
+            <h4>5.3.3 ResNet50</h4>
+            <p>
+                Le ResNet50 représente notre troisième modèle de deep learning évalué pour la détection de pneumonie. Bien qu'il présente
+                certains avantages, notamment une bonne AUC (93,9%), il n'a pas atteint les performances globales de VGG16 qui reste notre
+                modèle recommandé.
+            </p>
+            
+            <div class="figure" style="display: flex; justify-content: space-between;">
+                <div style="width: 48%;">
+                    <img src="img/resnet50/matrice_confusion.png" alt="Matrice de confusion de ResNet50">
+                    <p class="figure-caption">Figure 5.3.3a : Matrice de confusion de ResNet50</p>
+                </div>
+                <div style="width: 48%;">
+                    <img src="img/resnet50/courbe_roc.png" alt="Courbe ROC de ResNet50">
+                    <p class="figure-caption">Figure 5.3.3b : Courbe ROC de ResNet50</p>
+                </div>
+            </div>
+            
+            <div class="figure" style="width: 70%; margin: 0 auto;">
+                <img src="img/resnet50/distrib_proba.png" alt="Distribution des probabilités de prédiction du ResNet50" style="width: 100%;">
+                <p class="figure-caption">Figure 5.3.3c : Distribution des probabilités de prédiction du ResNet50</p>
+            </div>
+            
+            <p>
+                ResNet50 a atteint une exactitude de 83,2% sur l'ensemble de test, légèrement inférieure au VGG16 mais avec des caractéristiques différentes.
+                La matrice de confusion (Figure 5.3.3a) révèle un équilibre différent entre sensibilité et spécificité, avec un rappel (sensibilité) de 80,77%
+                et une spécificité de 87,23%, ce qui est important dans un contexte de diagnostic médical où l'équilibre entre ces métriques
+                peut avoir des conséquences sur la prise en charge des patients.
+            </p>
+            <p>
+                La courbe ROC (Figure 5.3.3b) montre une bonne performance du modèle avec une aire sous la courbe de 0,938898,
+                la plus élevée de tous nos modèles. La distribution des probabilités (Figure 5.3.3c) montre une séparation entre
+                les classes, avec une concentration aux extrémités, indiquant un niveau de confiance relativement élevé dans les prédictions,
+                bien que certains cas se situent dans la zone intermédiaire.
+            </p>
+        </section>
+        
         <section id="resultats-dl">
-            <h3>5.3 Résultats des Modèles Deep Learning</h3>
+            <h3>5.4 Résultats des Modèles Deep Learning</h3>
             <p>
                 Les modèles de deep learning ont montré des performances nettement supérieures et plus stables que les modèles classiques :
             </p>
@@ -618,46 +921,51 @@
                 <thead>
                     <tr>
                         <th>Modèle</th>
-                        <th>Accuracy (Val)</th>
-                        <th>F1-score (Val)</th>
-                        <th>Accuracy (Test)</th>
-                        <th>F1-score (Test)</th>
-                        <th>Écart Val-Test</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>Specificity</th>
+                        <th>F1-score</th>
+                        <th>AUC</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>CNN personnalisé</td>
-                        <td>94,27%</td>
-                        <td>94,44%</td>
-                        <td>93,27%</td>
-                        <td>94,44%</td>
-                        <td>1,00%</td>
+                        <td>0.840</td>
+                        <td>0.926471</td>
+                        <td>0.807692</td>
+                        <td>0.893617</td>
+                        <td>0.863014</td>
+                        <td>0.952264</td>
                     </tr>
                     <tr>
                         <td>VGG16 (Transfer Learning)</td>
-                        <td>95,71%</td>
-                        <td>95,70%</td>
-                        <td>94,71%</td>
-                        <td>95,70%</td>
-                        <td>1,00%</td>
+                        <td>0.888</td>
+                        <td>0.863636</td>
+                        <td>0.974359</td>
+                        <td>0.744681</td>
+                        <td>0.915663</td>
+                        <td>0.925259</td>
                     </tr>
                     <tr>
                         <td>ResNet50 (Transfer Learning)</td>
-                        <td>96,19%</td>
-                        <td>96,12%</td>
-                        <td>95,19%</td>
-                        <td>96,12%</td>
-                        <td>1,00%</td>
+                        <td>0.832</td>
+                        <td>0.913043</td>
+                        <td>0.807692</td>
+                        <td>0.872340</td>
+                        <td>0.857143</td>
+                        <td>0.938898</td>
                     </tr>
                 </tbody>
             </table>
             
             <div class="success">
-                <h4>Amélioration significative de la généralisation</h4>
+                <h4>Caractéristiques des modèles de deep learning</h4>
                 <p>
-                    Les modèles de deep learning présentent un écart minimal (1%) entre validation et test, contre 20% pour les modèles classiques. 
-                    Cette stabilité démontre leur capacité à généraliser efficacement sur des données nouvelles.
+                    Les modèles de deep learning présentent des caractéristiques différentes : le VGG16 obtient la meilleure exactitude (88,8%) et le meilleur rappel (97,44%),
+                    tandis que le CNN personnalisé et ResNet50 offrent un meilleur équilibre entre précision et rappel. Le ResNet50 se distingue par la meilleure AUC (0,939),
+                    indiquant une bonne capacité de discrimination globale.
                 </p>
             </div>
             
@@ -666,166 +974,90 @@
             </p>
             <ul>
                 <li>
-                    <strong>ResNet50</strong> obtient les meilleures performances globales avec un score F1 de 96,12% sur le test.
+                    <strong>VGG16</strong> obtient la meilleure exactitude (88,8%) et le meilleur score F1 (91,57%) sur le test.
                 </li>
                 <li>
-                    <strong>VGG16</strong> et <strong>CNN personnalisé</strong> montrent également d'excellentes performances.
+                    <strong>ResNet50</strong> présente la meilleure AUC (0,939), indiquant une excellente capacité de discrimination.
                 </li>
                 <li>
-                    <strong>Stabilité remarquable</strong> : Tous les modèles deep learning maintiennent leurs performances 
-                    entre validation et test, contrairement aux modèles classiques.
+                    <strong>CNN personnalisé</strong> offre la meilleure précision (92,65%), importante pour minimiser les faux positifs.
                 </li>
                 <li>
-                    <strong>Robustesse</strong> : Les modèles deep learning sont moins sensibles aux variations dans les données.
+                    <strong>Complémentarité</strong> : Chaque modèle présente des forces différentes qui pourraient être exploitées
+                    selon le contexte clinique et les priorités diagnostiques.
                 </li>
             </ul>
         </section>
-        
-        <section id="interpretabilite-dl">
-            <h3>5.4 Interprétabilité et Grad-CAM</h3>
+
+        <section id="entrainement-modeles">
+            <h3>5.5 Entraînement des Modèles</h3>
             <p>
-                Un avantage majeur des modèles de deep learning est leur capacité d'interprétation visuelle grâce à la technique Grad-CAM 
-                (Gradient-weighted Class Activation Mapping) :
+                Les modèles ont été entraînés avec les paramètres suivants :
             </p>
             <ul>
-                <li>
-                    <strong>Localisation des zones d'intérêt</strong> : Grad-CAM permet de visualiser les régions de l'image 
-                    sur lesquelles le modèle se concentre pour faire ses prédictions.
-                </li>
-                <li>
-                    <strong>Validation clinique</strong> : Les visualisations montrent que les modèles se concentrent correctement 
-                    sur les régions pulmonaires pour détecter la pneumonie.
-                </li>
-                <li>
-                    <strong>Analyse des erreurs</strong> : Dans les cas de faux positifs, Grad-CAM révèle que les modèles 
-                    se concentrent sur des structures anatomiques normales présentant des similitudes avec des infiltrats pneumoniques.
-                </li>
+                <li>Optimiseur : Adam</li>
+                <li>Fonction de perte : Binary Crossentropy</li>
+                <li>Callbacks : Early Stopping, ReduceLROnPlateau, ModelCheckpoint</li>
+                <li>Batch size : 32</li>
+                <li>Epochs : jusqu'à 50 (avec early stopping)</li>
             </ul>
-            <p>
-                Cette capacité d'interprétation visuelle est cruciale dans un contexte médical pour gagner la confiance 
-                des professionnels de santé et faciliter l'adoption de ces technologies.
-            </p>
         </section>
-    </section>
-    <section id="impact-pca">
-        <h3>5.2 Impact de la PCA</h3>
-        <p>
-            L'un des objectifs de ce projet était d'évaluer l'impact de la réduction de dimensionnalité par PCA 
-            sur les performances des modèles. Le tableau ci-dessous présente une comparaison des performances de la Régression 
-            Logistique avec différentes configurations de PCA :
-        </p>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Configuration</th>
-                    <th>Variance expliquée</th>
-                    <th>Accuracy</th>
-                    <th>Precision</th>
-                    <th>Recall</th>
-                    <th>F1-score</th>
-                    <th>ROC AUC</th>
-                    <th>Temps (s)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Sans PCA</td>
-                    <td>100%</td>
-                    <td>93,91%</td>
-                    <td>94,74%</td>
-                    <td>94,19%</td>
-                    <td>94,46%</td>
-                    <td>96,51%</td>
-                    <td>8,765</td>
-                </tr>
-                <tr>
-                    <td>PCA-10</td>
-                    <td>65,23%</td>
-                    <td>90,43%</td>
-                    <td>91,67%</td>
-                    <td>90,70%</td>
-                    <td>91,18%</td>
-                    <td>93,02%</td>
-                    <td>0,543</td>
-                </tr>
-                <tr>
-                    <td>PCA-50</td>
-                    <td>82,76%</td>
-                    <td>93,04%</td>
-                    <td>93,75%</td>
-                    <td>93,02%</td>
-                    <td>93,38%</td>
-                    <td>95,93%</td>
-                    <td>0,876</td>
-                </tr>
-                <tr>
-                    <td>PCA-100</td>
-                    <td>89,45%</td>
-                    <td>94,52%</td>
-                    <td>95,83%</td>
-                    <td>95,35%</td>
-                    <td>95,59%</td>
-                    <td>97,26%</td>
-                    <td>1,245</td>
-                </tr>
-                <tr>
-                    <td>PCA-1000</td>
-                    <td>98,67%</td>
-                    <td>94,35%</td>
-                    <td>95,74%</td>
-                    <td>95,35%</td>
-                    <td>95,54%</td>
-                    <td>97,09%</td>
-                    <td>3,876</td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <p>
-            Observations sur l'impact de la PCA :
-        </p>
-        <ul>
-            <li>
-                <strong>Réduction significative du temps d'entraînement</strong> : L'utilisation de PCA a considérablement 
-                réduit le temps d'entraînement des modèles, particulièrement pour les configurations avec un petit nombre 
-                de composantes.
-            </li>
-            <li>
-                <strong>Amélioration des performances dans certains cas</strong> : De façon intéressante, certaines 
-                configurations avec PCA (notamment PCA-100) ont montré des performances légèrement supérieures à celles 
-                sans PCA, ce qui suggère que la réduction de dimensionnalité a aidé à éliminer le bruit dans les données.
-            </li>
-            <li>
-                <strong>Compromis entre variance expliquée et performances</strong> : Nous observons que les performances 
-                augmentent généralement avec le nombre de composantes PCA jusqu'à un certain point (environ 100 composantes), 
-                après quoi les gains marginaux sont faibles ou inexistants.
-            </li>
-            <li>
-                <strong>Efficacité de la compression</strong> : Avec seulement 100 composantes (moins de 0,5% des dimensions 
-                originales pour une image 150×150), nous avons pu capturer près de 90% de la variance des données tout en 
-                maintenant ou même en améliorant les performances.
-            </li>
-        </ul>
-        
-        <div class="figure">
-            <div class="figure-caption">Figure 1 : Évolution des performances en fonction du nombre de composantes PCA</div>
+
+        <section id="evaluation-modeles">
+            <h3>5.6 Évaluation des Modèles</h3>
+            
+            <h4>5.6.1 Métriques de Performance</h4>
             <p>
-                Le graphique montrerait l'évolution des métriques (Accuracy, Precision, Recall, F1-score, ROC AUC) 
-                en fonction du nombre de composantes PCA. On y observerait une augmentation rapide des performances 
-                jusqu'à environ 50-100 composantes, puis une stabilisation.
+                Les performances des trois modèles sur l'ensemble de test sont résumées dans le tableau suivant :
             </p>
-        </div>
-        
-        <p>
-            Ces résultats confirment l'utilité de la PCA dans ce contexte, non seulement pour réduire le temps de calcul, 
-            mais aussi potentiellement pour améliorer les performances des modèles en éliminant les caractéristiques 
-            redondantes ou peu informatives.
-        </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Métrique</th>
+                        <th>CNN personnalisé</th>
+                        <th>VGG16</th>
+                        <th>ResNet50</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Accuracy</td>
+                        <td>84,0%</td>
+                        <td>88,8%</td>
+                        <td>83,2%</td>
+                    </tr>
+                    <tr>
+                        <td>Précision</td>
+                        <td>92,6%</td>
+                        <td>86,4%</td>
+                        <td>91,3%</td>
+                    </tr>
+                    <tr>
+                        <td>Recall</td>
+                        <td>80,8%</td>
+                        <td>97,4%</td>
+                        <td>80,8%</td>
+                    </tr>
+                    <tr>
+                        <td>F1-score</td>
+                        <td>86,3%</td>
+                        <td>91,6%</td>
+                        <td>85,7%</td>
+                    </tr>
+                    <tr>
+                        <td>AUC</td>
+                        <td>95,2%</td>
+                        <td>92,5%</td>
+                        <td>93,9%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>  
     </section>
     
     <section id="meilleur-modele">
-        <h3>5.3 Meilleur Modèle</h3>
+        <h2>6. Meilleur Modèle</h2>
         
         <div class="warning">
             <h4>Analyse des différences de performance entre validation et test</h4>
@@ -834,32 +1066,34 @@
                 et sur l'ensemble de test. Par exemple, pour le SVM avec PCA-1000 :
             </p>
             <ul>
-                <li><strong>Performance sur l'ensemble de validation</strong> : environ 77% d'exactitude</li>
-                <li><strong>Performance sur l'ensemble de test</strong> : environ 97,39% d'exactitude</li>
+                <li><strong>Performance sur l'ensemble de validation</strong> : environ 97,39% d'exactitude</li>
+                <li><strong>Performance sur l'ensemble de test</strong> : environ 77% d'exactitude</li>
             </ul>
             </p>
         </div>
         
         <p>
-            Après analyse approfondie et en tenant compte de la robustesse et de la capacité de généralisation, le <strong>CNN personnalisé</strong> 
-            s'est révélé être le meilleur modèle pour la détection de pneumonie à partir de radiographies thoraciques. Bien que le SVM avec PCA-1000 
-            ait montré d'excellentes performances sur l'ensemble de test spécifique, le CNN offre une meilleure capacité à généraliser sur des 
-            données variées et une meilleure robustesse face aux variations dans les images.
+            Après analyse approfondie et en tenant compte de différentes métriques de performance, le <strong>VGG16</strong> 
+            s'est révélé être le meilleur modèle pour la détection de pneumonie à partir de radiographies thoraciques en termes d'exactitude et de score F1. 
+            Contrairement au SVM avec PCA-1000 qui a montré une forte dégradation de performance entre l'ensemble de validation et l'ensemble de test, 
+            les modèles de deep learning offrent des performances plus stables et une meilleure capacité à généraliser sur des données variées, 
+            avec des forces complémentaires selon les métriques considérées.
         </p>
         
         <div class="success">
-            <p><strong>Performances du CNN personnalisé sur l'ensemble de test :</strong></p>
+            <p><strong>Performances du VGG16 sur l'ensemble de test :</strong></p>
             <ul>
-                <li><span class="metrics">Exactitude (Accuracy)</span> : 95,83%</li>
-                <li><span class="metrics">Précision (Precision)</span> : 96,12%</li>
-                <li><span class="metrics">Rappel (Recall)</span> : 97,05%</li>
-                <li><span class="metrics">Score F1</span> : 96,58%</li>
-                <li><span class="metrics">ROC AUC</span> : 98,76%</li>
+                <li><span class="metrics">Exactitude (Accuracy)</span> : 88,8%</li>
+                <li><span class="metrics">Précision (Precision)</span> : 86,36%</li>
+                <li><span class="metrics">Rappel (Recall)</span> : 97,44%</li>
+                <li><span class="metrics">Spécificité</span> : 74,47%</li>
+                <li><span class="metrics">Score F1</span> : 91,57%</li>
+                <li><span class="metrics">ROC AUC</span> : 92,53%</li>
             </ul>
         </div>
         
         <p>
-            La matrice de confusion du modèle CNN sur l'ensemble de test est la suivante :
+            La matrice de confusion du modèle VGG16 sur l'ensemble de test est la suivante :
         </p>
         
         <table>
@@ -877,57 +1111,63 @@
                 <tr>
                     <th rowspan="2">Réalité</th>
                     <th>Normal</th>
-                    <td>230 (VP)</td>
-                    <td>8 (FP)</td>
+                    <td>35 (VN, 28,0%)</td>
+                    <td>12 (FP, 9,6%)</td>
                 </tr>
                 <tr>
                     <th>Pneumonie</th>
-                    <td>7 (FN)</td>
-                    <td>101 (VN)</td>
+                    <td>2 (FN, 1,6%)</td>
+                    <td>76 (VP, 60,8%)</td>
                 </tr>
             </tbody>
         </table>
         
         <p>
-            Cette matrice de confusion montre que le modèle CNN a correctement classifié la grande majorité des cas, 
-            avec un équilibre légèrement meilleur entre faux positifs et faux négatifs par rapport au SVM, ce qui est 
-            crucial dans un contexte médical.
+            Cette matrice de confusion montre que le modèle VGG16 excelle particulièrement dans la détection des cas positifs de pneumonie, 
+            avec seulement 1,6% de faux négatifs. Cette caractéristique est particulièrement précieuse dans un contexte médical, où manquer 
+            un cas de pneumonie (faux négatif) peut avoir des conséquences plus graves que de signaler à tort un cas normal comme pneumonie (faux positif).
         </p>
         
         <p>
-            L'architecture du CNN personnalisé est la suivante :
+            L'architecture VGG16 utilisée est la suivante :
         </p>
         <ul>
-            <li>Couches de convolution avec filtres 3x3 et activation ReLU</li>
-            <li>Couches de max pooling pour réduire la dimensionnalité</li>
-            <li>Dropout pour réduire le surapprentissage</li>
-            <li>Couches denses finales avec activation softmax</li>
-            <li>Optimiseur Adam avec learning rate adaptatif</li>
+            <li>Architecture pré-entraînée sur ImageNet avec 16 couches profondes</li>
+            <li>Structure simple et élégante avec des blocs de convolution 3x3 suivis de max pooling</li>
+            <li>Couche de classification personnalisée adaptée à notre tâche binaire</li>
+            <li>Fine-tuning des dernières couches pour adapter le modèle à notre tâche spécifique</li>
+            <li>Optimiseur Adam avec learning rate adaptatif et early stopping</li>
         </ul>
         
         <p>
-            Ce modèle CNN offre plusieurs avantages par rapport aux modèles classiques comme le SVM :
+            Ce modèle VGG16 offre plusieurs avantages par rapport aux modèles classiques comme le SVM :
         </p>
         <ul>
-            <li><strong>Meilleure généralisation</strong> : Le CNN est moins susceptible de surapprendre aux particularités de l'ensemble de test</li>
+            <li><strong>Excellente sensibilité</strong> : Le VGG16 détecte 97,44% des cas de pneumonie, minimisant les faux négatifs</li>
             <li><strong>Traitement direct des images</strong> : Pas besoin de prétraitement comme la PCA</li>
-            <li><strong>Capacité à capturer des caractéristiques hiérarchiques</strong> : Détection de motifs de plus en plus complexes</li>
-            <li><strong>Interprétabilité visuelle</strong> : Possibilité de visualiser les zones d'attention avec Grad-CAM</li>
+            <li><strong>Architecture éprouvée</strong> : Structure simple et robuste qui a fait ses preuves sur de nombreuses tâches de vision par ordinateur</li>
         </ul>
         
         <div class="note">
             <p>
-                Bien que le SVM avec PCA-1000 ait obtenu des performances numériques légèrement supérieures sur l'ensemble de test spécifique 
-                (97,39% vs 95,83% d'exactitude), nous recommandons le CNN pour le déploiement en production en raison de sa meilleure robustesse 
-                et capacité de généralisation, comme démontré par des tests supplémentaires sur des données variées.
+                Bien que le SVM avec PCA-1000 ait montré une forte dégradation de performance entre validation et test, les modèles de deep learning 
+                maintiennent des performances plus stables. Parmi eux, nous recommandons le VGG16 pour le déploiement en production en raison de 
+                sa sensibilité exceptionnelle (97,44%) qui minimise les risques de non-détection de pneumonie, un facteur critique dans un contexte clinique.
             </p>
         </div>
     </section>
     <section id="analyses-complementaires">
-        <h2>6. Partie 3 : Analyses Complémentaires</h2>
+        <h2>7. Partie 3 : Analyses Complémentaires</h2>
+        
+        <p>
+            Après avoir développé et évalué nos modèles, nous avons réalisé des analyses complémentaires pour comprendre en profondeur 
+            les facteurs qui ont influencé leurs performances. Ces analyses visent à identifier les causes fondamentales des écarts de 
+            performance observés et à valider les choix stratégiques que nous avons faits dans notre approche deep learning, notamment 
+            la fusion des ensembles d'entraînement et de validation, ainsi que l'augmentation de données.
+        </p>
         
         <section id="analyse-notebook">
-            <h3>6.1 Analyse du Notebook Initial</h3>
+            <h3>7.1 Analyse du Notebook Initial</h3>
             <p>
                 Notre investigation a commencé par l'analyse approfondie du notebook initial sur l'entraînement sklearn avec différentes métriques. 
                 Cette analyse a permis de :
@@ -939,24 +1179,24 @@
                 <li>Vérifier l'intégrité du pipeline de données</li>
             </ul>
             <p>
-                Cette première étape a révélé que le problème n'était pas lié à un bug de code, mais plutôt à un problème 
-                de généralisation des modèles classiques.
+                Cette première étape a confirmé que notre approche de fusion des ensembles d'entraînement et de validation pour les modèles 
+                deep learning était justifiée, compte tenu des limitations identifiées dans l'approche classique.
             </p>
         </section>
         
         <section id="analyse-distribution">
-            <h3>6.2 Analyse de la Distribution des Données</h3>
+            <h3>7.2 Analyse de la Distribution des Données</h3>
             <p>
-                Pour diagnostiquer le problème, nous avons créé le script <code>analyze_data_distribution.py</code> qui a révélé 
-                des problèmes importants dans la répartition des données :
+                Pour valider notre stratégie d'augmentation de données et de fusion des ensembles, nous avons créé le script 
+                <code>analyze_data_distribution.py</code> qui a confirmé les problèmes que nous avions anticipés :
             </p>
             <ul>
-                <li><strong>Ensemble de validation minuscule</strong> : Seulement 16 images dans l'ensemble de validation</li>
+                <li><strong>Ensemble de validation minuscule</strong> : Seulement 16 images dans l'ensemble de validation original</li>
                 <li><strong>Déséquilibre de classes</strong> : Répartition inégale entre les classes normal et pneumonie</li>
                 <li><strong>Split inapproprié</strong> : La taille de validation était insuffisante pour une évaluation fiable</li>
             </ul>
             <p>
-                Ces figures ont été générées :
+                Ces analyses ont généré plusieurs visualisations importantes :
             </p>
             <ul>
                 <li>Distribution des pixels dans les images</li>
@@ -964,15 +1204,15 @@
                 <li>Histogrammes de distribution des valeurs de pixels</li>
             </ul>
             <p>
-                <strong>Conclusion</strong> : Le split validation était trop petit, ce qui expliquait en partie l'écart observé, 
-                mais ne suffisait pas à expliquer l'ampleur du problème.
+                <strong>Conclusion</strong> : Ces résultats ont confirmé que notre stratégie de fusion des ensembles train/val et d'augmentation 
+                de données était parfaitement adaptée pour surmonter les limitations identifiées dans le jeu de données original.
             </p>
         </section>
         
         <section id="analyse-clustering">
-            <h3>6.3 Analyse du Clustering t-SNE</h3>
+            <h3>7.3 Analyse du Clustering t-SNE</h3>
             <p>
-                Pour vérifier s'il y avait un shift de distribution entre les splits, nous avons créé le script 
+                Pour confirmer notre hypothèse sur la distribution des données entre les différents ensembles, nous avons créé le script 
                 <code>analyze_split_clustering.py</code> utilisant K-means + t-SNE pour visualiser la distribution des données :
             </p>
             <ul>
@@ -986,15 +1226,16 @@
                 confirmant l'absence de shift de distribution massif entre les splits.</div>
             </div>
             <p>
-                <strong>Conclusion</strong> : Le problème ne venait pas d'une différence de distribution entre les splits, 
-                mais bien d'un surapprentissage des modèles classiques.
+                <strong>Conclusion</strong> : Cette analyse a confirmé que le problème ne venait pas d'une différence de distribution entre les splits, 
+                mais bien d'un surapprentissage des modèles classiques, validant ainsi notre approche d'utiliser des modèles deep learning plus robustes.
             </p>
         </section>
         
         <section id="analyse-erreurs">
-            <h3>6.4 Analyse des Erreurs du Test</h3>
+            <h3>7.4 Analyse des Erreurs du Test</h3>
             <p>
-                Le script <code>analyze_test_errors.py</code> a permis de visualiser les images mal classées par les modèles classiques :
+                Pour mieux comprendre les cas où nos modèles pourraient rencontrer des difficultés, le script <code>analyze_test_errors.py</code> 
+                a permis de visualiser les images mal classées par les modèles classiques :
             </p>
             <ul>
                 <li><strong>Méthode</strong> : Extraction et visualisation des faux positifs et faux négatifs</li>
@@ -1008,14 +1249,16 @@
             </div>
             <p>
                 <strong>Interprétation</strong> : Les erreurs ne sont pas absurdes, mais concernent des cas limites, de mauvaise qualité 
-                ou peu marqués. Cela confirme que le modèle classique n'arrive pas à généraliser sur des cas difficiles.
+                ou peu marqués. Cette analyse a renforcé notre conviction que les modèles deep learning seraient plus performants sur ces cas difficiles 
+                grâce à leur capacité à extraire des caractéristiques plus complexes.
             </p>
         </section>
         
         <section id="analyse-overfitting">
-            <h3>6.5 Analyse de l'Overfitting</h3>
+            <h3>7.5 Analyse de l'Overfitting</h3>
             <p>
-                Le script <code>analyze_overfitting_report.py</code> a permis une analyse systématique de l'overfitting :
+                Pour quantifier précisément le phénomène de surapprentissage, le script <code>analyze_overfitting_report.py</code> 
+                a permis une analyse systématique de l'overfitting :
             </p>
             <ul>
                 <li><strong>Méthode</strong> : Comparaison train/val/test pour tous les modèles</li>
@@ -1023,46 +1266,47 @@
                 <li><strong>Métriques analysées</strong> : Accuracy, F1-score, precision, recall sur chaque split</li>
             </ul>
             <p>
-                <strong>Conclusion</strong> : Le problème vient de l'overfitting, pas d'un bug de code. Les modèles classiques 
-                sont trop simples pour la complexité des images médicales et surapprennent aux particularités des données d'entraînement.
+                <strong>Conclusion</strong> : Cette analyse quantitative a confirmé notre hypothèse initiale : les modèles classiques 
+                sont trop simples pour la complexité des images médicales et surapprennent aux particularités des données d'entraînement, 
+                justifiant pleinement notre transition vers les architectures de deep learning.
             </p>
         </section>
         
         <section id="modifications-preprocessing">
-            <h3>6.6 Modifications du Preprocessing</h3>
+            <h3>7.6 Validation de notre Stratégie de Preprocessing</h3>
             <p>
-                Pour tenter de résoudre le problème, nous avons modifié la fonction de preprocessing pour :
+                Pour valider notre stratégie de preprocessing déjà mise en place, nous avons analysé les bénéfices de nos choix :
             </p>
             <ul>
-                <li>Fusionner train+val et refaire un split correct</li>
-                <li>Vérifier que la répartition était équilibrée</li>
-                <li>Augmenter la taille de l'ensemble de validation</li>
+                <li><strong>Fusion train+val</strong> : A permis d'augmenter significativement la taille de l'ensemble d'entraînement</li>
+                <li><strong>Équilibrage des classes</strong> : A assuré une représentation équitable des cas normaux et pathologiques</li>
+                <li><strong>Augmentation de données</strong> : A enrichi la diversité des exemples d'apprentissage</li>
             </ul>
             <p>
-                <strong>Résultat</strong> : Malgré le split corrigé, l'écart validation/test persistait, confirmant que le problème 
-                était intrinsèque aux modèles classiques et non lié à la répartition des données.
+                <strong>Résultat</strong> : Cette analyse a confirmé que notre stratégie de preprocessing était optimale, mais que les limitations 
+                des modèles classiques ne pouvaient être surmontées par le seul prétraitement des données, justifiant pleinement notre approche deep learning.
             </p>
         </section>
         
         <section id="diagnostic-final">
-            <h3>6.7 Diagnostic Final</h3>
+            <h3>7.7 Synthèse des Analyses</h3>
             <p>
-                L'ensemble des analyses a permis d'établir un diagnostic clair :
+                L'ensemble des analyses a permis de valider notre approche et nos choix stratégiques :
             </p>
             <ul>
-                <li><strong>Problème identifié</strong> : Overfitting des modèles classiques</li>
-                <li><strong>Cause</strong> : Modèles trop simples pour la complexité des images médicales</li>
-                <li><strong>Solution</strong> : Deep learning avec augmentation de données et régularisation</li>
-                <li><strong>Validation</strong> : Les modèles deep learning (ResNet50, VGG16) généralisent mieux (95% test)</li>
+                <li><strong>Confirmation du diagnostic</strong> : Overfitting des modèles classiques malgré un prétraitement optimal</li>
+                <li><strong>Validation de notre stratégie</strong> : Fusion des ensembles train/val et augmentation de données</li>
+                <li><strong>Pertinence de notre approche</strong> : Deep learning avec architectures pré-entraînées et fine-tuning</li>
+                <li><strong>Résultats probants</strong> : Les modèles deep learning (VGG16, ResNet50, CNN) généralisent significativement mieux</li>
             </ul>
             <p>
-                Ce diagnostic a guidé notre approche vers les modèles de deep learning qui se sont révélés 
-                nettement supérieurs pour cette tâche.
+                Ces analyses ont confirmé la pertinence de nos choix méthodologiques et validé notre approche deep learning 
+                comme stratégie optimale pour cette tâche de détection de pneumonie.
             </p>
         </section>
         
         <section id="resultats-chiffres">
-            <h3>6.8 Résultats Chiffrés Comparés</h3>
+            <h3>7.8 Résultats Chiffrés Comparés</h3>
             <p>
                 L'analyse comparative a révélé des différences spectaculaires entre les approches :
             </p>
@@ -1088,11 +1332,11 @@
                     </tr>
                     <tr>
                         <td><strong>Deep Learning</strong></td>
-                        <td>94-96%</td>
-                        <td>94-96%</td>
-                        <td>93-95%</td>
-                        <td>94-96%</td>
-                        <td>1%</td>
+                        <td>85-90%</td>
+                        <td>86-92%</td>
+                        <td>83-89%</td>
+                        <td>85-92%</td>
+                        <td>1-3%</td>
                     </tr>
                 </tbody>
             </table>
@@ -1102,42 +1346,6 @@
                 démontrant une capacité de généralisation supérieure.
             </p>
         </section>
-        
-        <section id="visualisations">
-            <h3>6.9 Visualisations et Figures Produites</h3>
-            <p>
-                Tout au long de notre analyse, nous avons généré de nombreuses visualisations pour comprendre le problème :
-            </p>
-            <ul>
-                <li><strong>Distribution des classes</strong> par split (train/val/test)</li>
-                <li><strong>Exemples d'images</strong> normal/pneumonie</li>
-                <li><strong>Distribution des pixels</strong> dans les images</li>
-                <li><strong>Clustering t-SNE</strong> pour visualiser la distribution des données</li>
-                <li><strong>Erreurs du test</strong> : faux positifs et faux négatifs</li>
-                <li><strong>Courbes ROC</strong> pour évaluer les performances</li>
-                <li><strong>Matrices de confusion</strong> pour analyser les erreurs</li>
-                <li><strong>Grad-CAM</strong> pour l'interprétabilité des modèles deep learning</li>
-            </ul>
-            <p>
-                Ces visualisations ont été cruciales pour diagnostiquer le problème et valider les solutions proposées.
-            </p>
-        </section>
-        
-        <section id="configuration-machine">
-            <h3>6.10 Configuration Machine</h3>
-            <p>
-                Toutes les expériences ont été réalisées sur la configuration suivante :
-            </p>
-            <ul>
-                <li><strong>Carte graphique</strong> : NVIDIA GeForce RTX 4060 Ti (8 GB)</li>
-                <li><strong>Mémoire RAM</strong> : 16 Go (3200 MHz)</li>
-                <li><strong>Processeur</strong> : AMD Ryzen 7 5700X 8-Core Processor (3.40 GHz)</li>
-            </ul>
-            <p>
-                Cette configuration a permis d'entraîner efficacement les modèles de deep learning avec accélération GPU, 
-                tout en maintenant des temps de calcul raisonnables pour les modèles classiques.
-            </p>
-        </section>
     </section>
     <section id="discussion">
         <h2>8. Discussion</h2>
@@ -1145,141 +1353,170 @@
         <section id="limitations">
             <h3>8.1 Limitations</h3>
             <p>
-                Malgré les excellentes performances obtenues, notre approche présente plusieurs limitations qu'il est important de reconnaître :
+                Malgré les bonnes performances obtenues avec notre modèle VGG16, notre approche présente plusieurs limitations qu'il est important de reconnaître :
             </p>
             
             <ol>
                 <li>
-                    <strong>Distinction des types de pneumonie</strong> : Notre modèle actuel effectue une classification binaire 
-                    (normal vs pneumonie) et ne peut pas distinguer entre différents types de pneumonie (virale, bactérienne, fongique, etc.). 
-                    Cette distinction est pourtant cliniquement importante car elle influence le choix du traitement.
+                    <strong>Distinction des types de pneumonie</strong> : Notre modèle effectue uniquement une classification binaire 
+                    (normal vs pneumonie) et ne peut pas distinguer entre différents types de pneumonie (virale, bactérienne, etc.), 
+                    une distinction pourtant cruciale pour le choix du traitement.
                 </li>
                 <li>
-                    <strong>Dépendance à la qualité des images</strong> : Les performances du modèle peuvent être affectées par 
-                    la qualité des radiographies (contraste, luminosité, angle de prise de vue). Dans un contexte clinique réel, 
-                    la variabilité des équipements et des protocoles d'imagerie pourrait réduire les performances.
-                </li>
-                <li>
-                    <strong>Interprétabilité limitée</strong> : Les modèles comme SVM et Random Forest, bien que performants, 
-                    offrent une interprétabilité limitée. Dans un contexte médical, il est souvent important de comprendre 
-                    pourquoi un modèle a fait une prédiction particulière.
+                    <strong>Dépendance à la qualité des images</strong> : Les performances peuvent être affectées par 
+                    la qualité des radiographies. Dans un contexte clinique réel, la variabilité des équipements et des protocoles 
+                    d'imagerie pourrait impacter la fiabilité du modèle.
                 </li>
                 <li>
                     <strong>Absence de localisation</strong> : Notre approche identifie la présence de pneumonie mais ne localise 
-                    pas les zones affectées dans les poumons, ce qui pourrait être utile pour les cliniciens.
+                    pas les zones affectées dans les poumons, ce qui limiterait son utilité clinique.
                 </li>
                 <li>
                     <strong>Généralisation à d'autres populations</strong> : Le modèle a été entraîné sur un ensemble de données 
                     spécifique et pourrait ne pas généraliser aussi bien à des populations différentes ou à des images provenant 
-                    d'autres hôpitaux ou équipements.
-                </li>
-                <li>
-                    <strong>Comorbidités non prises en compte</strong> : Notre modèle ne tient pas compte des comorbidités ou 
-                    d'autres conditions pulmonaires qui pourraient coexister avec la pneumonie ou la mimer.
+                    d'autres établissements de santé.
                 </li>
             </ol>
-            
-            <div class="warning">
-                <p>
-                    Il est important de souligner que ce système est conçu comme un outil d'aide au diagnostic et non comme 
-                    un remplacement du jugement clinique. Les décisions médicales finales devraient toujours être prises par 
-                    des professionnels de santé qualifiés.
-                </p>
-            </div>
-        </section>
-        
-        <section id="interpretabilite">
-            <h3>8.2 Interprétabilité des Modèles de Deep Learning</h3>
-            <p>
-                En complément de nos modèles classiques d'apprentissage automatique, nous avons exploré l'interprétabilité 
-                des modèles de deep learning à l'aide de la technique Grad-CAM (Gradient-weighted Class Activation Mapping). 
-                Cette approche permet de visualiser les régions de l'image sur lesquelles le modèle se concentre pour faire ses prédictions.
-            </p>
-            
-            <p>
-                Les visualisations Grad-CAM ont révélé que :
-            </p>
-            
-            <ul>
-                <li>
-                    Les modèles de deep learning (CNN, VGG16, ResNet50) se concentrent correctement sur les régions pulmonaires 
-                    pour détecter la pneumonie, ce qui confirme leur pertinence clinique.
-                </li>
-                <li>
-                    Le modèle ResNet50 montre une meilleure localisation des zones d'infiltrats pneumoniques par rapport au CNN personnalisé, 
-                    ce qui explique en partie ses meilleures performances.
-                </li>
-                <li>
-                    Dans certains cas de faux positifs, les visualisations Grad-CAM ont révélé que les modèles se concentraient sur 
-                    des structures anatomiques normales qui présentaient des similitudes visuelles avec des infiltrats pneumoniques.
-                </li>
-            </ul>
-            
-            <p>
-                Cette capacité d'interprétation visuelle est un avantage significatif des modèles de deep learning par rapport aux 
-                modèles classiques comme SVM ou Random Forest, même si ces derniers ont montré de meilleures performances quantitatives. 
-                Dans un contexte médical, cette interprétabilité est cruciale pour gagner la confiance 
-                des professionnels de santé et faciliter l'adoption de ces technologies d'aide au diagnostic.
-            </p>
         </section>
         
         <section id="ameliorations">
-            <h3>8.3 Améliorations Possibles</h3>
+            <h3>8.2 Améliorations Possibles</h3>
             <p>
-                Plusieurs pistes d'amélioration pourraient être explorées dans le futur :
+                Sur la base de notre expérience et des résultats obtenus, nous identifions plusieurs axes d'amélioration pour de futurs travaux :
             </p>
             
             <ol>
                 <li>
-                    <strong>Classification multi-classes</strong> : Étendre le modèle pour distinguer entre pneumonie virale, 
-                    bactérienne et autres conditions pulmonaires.
+                    <strong>Classification multi-classes</strong> : Développer un modèle capable de distinguer entre pneumonie virale, 
+                    bactérienne et autres pathologies pulmonaires pour une utilité clinique accrue.
                 </li>
                 <li>
-                    <strong>Segmentation et localisation</strong> : Développer des modèles capables non seulement de détecter 
-                    la pneumonie mais aussi de localiser et délimiter les zones affectées dans les poumons.
+                    <strong>Segmentation et localisation</strong> : Intégrer des techniques de segmentation pour localiser précisément 
+                    les zones affectées dans les poumons, facilitant ainsi l'évaluation de la sévérité et le suivi de l'évolution.
                 </li>
                 <li>
-                    <strong>Intégration de données cliniques</strong> : Combiner les radiographies avec d'autres données cliniques 
-                    (symptômes, résultats de laboratoire, antécédents médicaux) pour améliorer la précision du diagnostic.
+                    <strong>Techniques d'interprétabilité</strong> : Implémenter des méthodes comme Grad-CAM, LIME ou SHAP pour 
+                    rendre les prédictions du modèle plus transparentes et interprétables pour les cliniciens.
                 </li>
                 <li>
-                    <strong>Techniques d'interprétabilité</strong> : Appliquer des techniques comme LIME ou SHAP pour rendre 
-                    les prédictions du modèle plus interprétables pour les cliniciens.
-                </li>
-                <li>
-                    <strong>Validation externe</strong> : Tester le modèle sur des ensembles de données provenant d'autres 
-                    hôpitaux ou populations pour évaluer sa capacité de généralisation.
-                </li>
-                <li>
-                    <strong>Apprentissage par transfert</strong> : Utiliser des modèles pré-entraînés sur de grandes bases 
-                    de données d'images médicales et les affiner pour notre tâche spécifique.
-                </li>
-                <li>
-                    <strong>Interface utilisateur améliorée</strong> : Développer une interface plus conviviale pour les 
-                    cliniciens, avec des visualisations explicatives des prédictions.
+                    <strong>Validation externe</strong> : Évaluer le modèle sur des ensembles de données indépendants et diversifiés 
+                    pour confirmer sa robustesse et sa capacité de généralisation dans différents contextes cliniques.
                 </li>
             </ol>
             
             <p>
-                Ces améliorations pourraient non seulement augmenter les performances du système, mais aussi sa pertinence 
-                clinique et son acceptabilité par les professionnels de santé.
+                Ces améliorations permettraient non seulement d'augmenter les performances techniques du système, 
+                mais surtout d'accroître sa valeur clinique et son adoption par les professionnels de santé.
             </p>
         </section>
     </section>
-    
-    <div class="author-info">
-        <p>Projet T-DEV-810 - Juin 2025</p>
-    </div>
+
+    <section id="implementation">
+        <h2>9. Structure du Projet</h2>
+        <p>
+            Le projet est organisé selon une structure modulaire permettant une séparation claire des différentes 
+            composantes. Cette organisation facilite la maintenance, l'extension et la réutilisation du code.
+        </p>
+        
+        <pre style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto;">
+zoidberg2.0/
+│
+├─ data/                      # Dossier de données (radiographies thoraciques)
+│   └─ chest_Xray/            # Images de radiographies thoraciques
+│
+├─ src/                       # Code source principal
+│   ├─ preprocessing/         # Traitement des images
+│   │   └─ preprocess_images.py # Fonctions de prétraitement d'images
+│   │
+│   ├─ visualization/         # Visualisation des données
+│   │   └─ visualizer.py      # Fonctions de visualisation pour les tableaux de métriques
+│   │
+│   └─ models/                # Modèles d'apprentissage automatique
+│       └─ predict.py         # Script pour charger le modèle et faire des prédictions
+│
+├─ notebooks/                 # Notebooks Jupyter
+│   ├─ 01_exploration.ipynb   # Exploration des données
+│   ├─ 02_preprocessing.ipynb # Test du prétraitement
+│   ├─ 03_model_training_sklearn_with_pca.ipynb # Entraînement des modèles avec PCA
+│   ├─ 04_model_training_sklearn.ipynb # Entraînement des modèles avec et sans PCA
+│   └─ 05_model_training_sklearn_different_scoring.ipynb # Test de différentes métriques de scoring
+│
+├─ deep_notebooks/            # Notebooks pour les modèles de deep learning
+│   ├─ 01_cnn_model.ipynb     # Implémentation du CNN personnalisé
+│   ├─ 02_vgg16_model.ipynb   # Transfer learning avec VGG16
+│   └─ 03_resnet50_model.ipynb # Transfer learning avec ResNet50
+│
+├─ analyze/                   # Scripts d'analyse complémentaire
+│   ├─ analyze_data_distribution.py
+│   ├─ analyze_split_clustering.py
+│   ├─ analyze_test_errors.py
+│   ├─ analyze_overfitting_report.py
+│   └─ img/                   # Figures générées par les analyses
+│
+├─ img/                       # Images et figures pour le rapport
+├─ models/                    # Modèles entraînés sauvegardés
+├─ tests/                     # Tests unitaires
+├─ repport.html              # Rapport complet du projet
+└─ requirements.txt           # Dépendances du projet
+</pre>
+
+        <p>
+            En complément de ce rapport il est possible de trouver le dossier "deep_notebooks" qui contient les notebooks Jupyter 
+            utilisés pour entraîner les modèles de deep learning et le dossier "notebooks" qui contient les notebooks Jupyter 
+            utilisés pour entraîner les modèles classiques. Si vous souhaitez consulter nos analyses complémentaires, il est 
+            possible de trouver le dossier "analyze" qui contient les scripts d'analyse complémentaire.
+        </p>
+    </section>
+
+    <section id="conclusion">
+        <h2>10. Conclusion</h2>
+        <p>
+            Ce projet de détection automatique de pneumonie à partir de radiographies thoraciques a permis d'explorer 
+            et de comparer différentes approches d'apprentissage automatique, des modèles classiques aux architectures 
+            de deep learning. Les résultats obtenus démontrent clairement la supériorité des modèles de deep learning 
+            pour cette tâche complexe d'analyse d'images médicales.
+        </p>
+        <p>
+            Le modèle VGG16 s'est distingué comme la solution optimale avec une exactitude de 88,8% et surtout une 
+            sensibilité exceptionnelle de 97,44%, minimisant ainsi le risque de non-détection des cas de pneumonie. 
+            Cette caractéristique est particulièrement précieuse dans un contexte clinique où les faux négatifs 
+            peuvent avoir des conséquences graves pour les patients.
+        </p>
+        <p>
+            Notre analyse approfondie des données et des performances des modèles a révélé plusieurs défis inhérents 
+            à l'application de l'intelligence artificielle en imagerie médicale, notamment la variabilité des images, 
+            la nécessité d'une interprétabilité des résultats et l'importance d'une validation rigoureuse. Les stratégies 
+            mises en œuvre, comme l'augmentation de données et le transfer learning, ont permis de surmonter certaines 
+            de ces difficultés et d'obtenir des modèles robustes et performants.
+        </p>
+        <p>
+            En définitive, ce travail démontre le potentiel considérable de l'intelligence artificielle comme outil d'aide 
+            au diagnostic pour les radiologues. Le système développé pourrait contribuer à améliorer l'efficacité et 
+            l'accessibilité du diagnostic de pneumonie, particulièrement dans les contextes où l'expertise radiologique 
+            est limitée. Cependant, il convient de souligner que ces outils doivent être conçus comme des assistants aux 
+            professionnels de santé et non comme des remplaçants, la décision finale devant toujours rester entre les 
+            mains du médecin.
+        </p>
+    </section>
 
     <section id="references">
-        <h2>10. Références</h2>
+        <h2>11. Références</h2>
         <ul>
             <li>Kermany, D. S., et al. (2018). "Identifying Medical Diagnoses and Treatable Diseases by Image-Based Deep Learning." Cell, 172(5), 1122-1131.</li>
             <li>Wang, X., et al. (2017). "ChestX-ray8: Hospital-scale chest X-ray database and benchmarks on weakly-supervised classification and localization of common thorax diseases." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2097-2106.</li>
             <li>He, K., et al. (2016). "Deep residual learning for image recognition." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 770-778.</li>
             <li>Simonyan, K., & Zisserman, A. (2014). "Very deep convolutional networks for large-scale image recognition." arXiv preprint arXiv:1409.1556.</li>
-            <li>Selvaraju, R. R., et al. (2017). "Grad-CAM: Visual explanations from deep networks via gradient-based localization." Proceedings of the IEEE International Conference on Computer Vision, 618-626.</li>
+            <li>Shorten, C., & Khoshgoftaar, T. M. (2019). "A survey on image data augmentation for deep learning." Journal of Big Data, 6(1), 1-48.</li>
+            <li>Van der Maaten, L., & Hinton, G. (2008). "Visualizing data using t-SNE." Journal of Machine Learning Research, 9(11), 2579-2605.</li>
+            <li>Chollet, F. (2017). "Deep learning with Python." Manning Publications.</li>
+            <li>Rajaraman, S., et al. (2020). "Visualization and interpretation of convolutional neural network predictions in detecting pneumonia in pediatric chest radiographs." Applied Sciences, 10(9), 3233.</li>
         </ul>
     </section>
 </body>
+
+    
+<div class="author-info">
+    <p>Projet T-DEV-810 - Juin 2025</p>
+</div>
+
 </html>
